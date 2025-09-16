@@ -83,3 +83,32 @@ Khi có 1 input/output request, nó sẽ thực thi cái mode là transfering, l
 + Không cần sử dụng CPU.
 + Thích hợp cho việc di chuyển lượng lớn dữ liệu.
 - Khi CPU phát ra 1 yêu cầu đọc dữ liệu, có 2 cách, 1 là dữ liệu giao tiếp trục tiếp với CPU, 2 là dữ liệu giao tiếp trực tiếp với memory qua cơ chế DMA, di chuyển CPU thông qua Cache. Và trong quá trình đó thì các lệnh vẫn thực thi qua chu kỳ đó.
+----QUIZ----
+Câu 1: Ngắt chuyển điều khiển đến interrupt service routine thông qua thành phần nào?
+Answer key: interrupt vector (chứa địa chỉ của tất cả các service routine).
+Câu 2: Trong các loại bộ nhớ SSD, RAM, Cache, Register, bộ nhớ nào có tốc độ truy xuất chậm nhất?
+Answer key: SSD.
+Câu 3: Một máy tính hiện nay gồm CPU (một hoặc nhiều) và các trình điều khiển thiết bị (device controller) kết nối với nhau thông qua bus để truy xuất ...
+Answer key: bộ nhớ chia sẻ
+III. Kiến trúc hệ thống máy tính:
+- Hệ thống đơn bộ xử lý (Single-Processor Systems).
+- Hệ thống đa bộ xử lý (Multiprocessor Systems).
+= Hệ thống gom cụm (Clustered Systems).
+- Phân biệt các khái niệm về bộ xử lý:
++ CPU (Central Processor Unit) - Thành phần phần cứng thực thi các lệnh.
++ Processor (bộ xử lý) - Một con chip (vật lý) chứa một hoặc nhiều CPU.
++ Core (lõi/nhân) - Đơn vị tính toán cơ bản của CPU.
++ Multicore (đa lõi) - Bao gồm nhiều lõi tính toán trên cùng một CPU.
++ Multiprocessor (đa bộ xử lý) - Bao gồm nhiều bộ xử lý.
+3.1. Hệ thống đơn bộ xử lý:
+- Chỉ có một bộ xử lý đa dụng (general-purpose processor) với một lõi duy nhất: thực thi các tập lệnh đa dụng (bao gồm các lệnh trong các tiến trình).
+- Có thể kèm theo các bộ xử lý riêng biệt (special-purpose): chỉ có thể thực thi các tập lệnh hạn chế và không thể chạy tiến trình.
+3.2. Hệ thống đa bộ xử lý:
+- Tên gọi khác: parallel systems, tightly-coupled systems.
+- Ưu điểm:
++ Tăng cường năng suất hệ thống (system throughput): càng nhiều bộ xử lý thì càng nhanh xong công việc.
++ Kinh tế: ít tốn kém vì có thể dùng chung tài nguyên (đĩa...)
++ Độ tin cậy cao: khi một bộ xử lý hỏng thì công việc của nó được chia sẻ giữa các bộ xử lý còn lại.
+- Phân loại: 
++ Đa xử lý bất đối xứng (asymmetric multiprocessing) - một bộ xử lý thực thi công việc khác nhau.
++ Đa xử lý đối xứng (symmetric multiprocessing) - một bộ xử lý cùng thực hiện tất cả công việc.
