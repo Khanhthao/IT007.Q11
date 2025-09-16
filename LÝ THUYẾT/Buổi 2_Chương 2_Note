@@ -1,1 +1,23 @@
-
+CHƯƠNG 2: CẤU TRÚC HỆ ĐIỀU HÀNH
+I. Các thành phần của hệ điều hành:
+- Quản lý tiến trình: điều phối việc sử dụng CPU để thực thi các tiến trình của mình.
+- Quản lý bộ nhớ chính.
+- Quản lý file: bao gồm tập tin và thư mục.
+- Quản lý hệ thống I/O.
+- Quản lý hệ thống lưu trữ thứ cấp.
+- Hệ thống bảo vệ.
+- Hệ thống thông dịch lệnh.
+1.1. Quản lý tiến trình:
+- Để hoàn thành công việc, một tiến trình cần: CPU, Bộ nhớ, File, Thiết bị I/O...
+- Các nhiệm vụ chính:
++ Tạo và hủy tiến trình.
++ Tạm dừng và thực thi tiếp tiến trình.
++ Cung cấp các cơ chế:
+  Đồng bộ hoạt động các tiến trình.
+  Giao tiếp giữa các tiến trình.
+  Khống chế tắc nghẽn.
+----QUIZ----
+Câu 1: Để hoàn thành công việc, một tiến trình KHÔNG bắt buộc phải có Thanh ghi, CPU, Bộ nhớ, Màn hình trong các tài nguyên phần cứng đã nêu trên?
+Answer key: Màn hình.
+Câu 2: Theo nội dung video bài giảng về các thành phần trong hệ điều hành mà ban vừa xem, thì thành phần nào sau đây không phải là 1 thành phần của hệ điều hành: Hệ thống bảo vệ, Quản lý tiểu trình, Quản lý tiến trình và Quản lý file?
+Answer key: Quản lý tiểu trình.
