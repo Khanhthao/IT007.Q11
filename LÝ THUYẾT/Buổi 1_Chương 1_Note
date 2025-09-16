@@ -112,3 +112,18 @@ III. Kiến trúc hệ thống máy tính:
 - Phân loại: 
 + Đa xử lý bất đối xứng (asymmetric multiprocessing) - một bộ xử lý thực thi công việc khác nhau.
 + Đa xử lý đối xứng (symmetric multiprocessing) - một bộ xử lý cùng thực hiện tất cả công việc.
+- Kiến trúc đa xử lý đối xứng: 
+Hai processor, mỗi processor có CPU riêng, có register và cache riêng và 2 processor dùng chung một main memory.
+Kiến trúc có nhiều CPU, main thông thường thì không dùng.
+- Thiết kế nhân kép (dual): 
+1 processor, có nhiều core, mỗi core có tập thanh ghi và cache cấp độ riêng rùi nó giao tiếp cache cấp độ 2, 3 rùi mới chuyển tới main memory.
+- Hệ thống NUMA (Non-Uniform Memory Access):
+Mỗi CPU có 1 phân vùng nhớ riêng, 1 RAM riêng và giao tiếp với nhau bằng interconnect.
+3.3. Hệ thống gom cụm:
+- Là một dạng hệ thống đa bộ xử lý, nhưng gồm nhiều hệ thống làm việc với nhau:
++ Thường chia sẻ không gian lưu trữ qua mạng lưu trữ khu vực (storage-area network - SAN).
++ Cung cấp các dịch vụ có độ sẵn sàng cao (high-availability): dịch vụ được cung cấp liên tục cho dù một phần cứng của cụm bị hỏng.
++ Có thể theo cấu trúc đối xứng hoặc bất đối xứng:
+  Gom cụm bất đối xứng (asymmetric clustering): một máy ở chế độ (mode) hot-standby, các máy còn lại chạy ứng dụng.
+  Gom cụm đối xứng (symmetric clustering): nhiều nút (node) chạy ứng dụng và giám sát các nút còn lại.
+- Cấu trúc: gồm các hệ thống tính toán giao tiếp với nhau qua interconnect, giao tiếp với nhau qua storage-area network. Thì những hệ thống gom cụm được sử dụng trong cloud computing và các nhà cung cấp dịch vụ về lưu trữ hiện nay như AWS,...
