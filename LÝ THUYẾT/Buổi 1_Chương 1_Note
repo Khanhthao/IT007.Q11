@@ -127,3 +127,47 @@ Mỗi CPU có 1 phân vùng nhớ riêng, 1 RAM riêng và giao tiếp với nha
   Gom cụm bất đối xứng (asymmetric clustering): một máy ở chế độ (mode) hot-standby, các máy còn lại chạy ứng dụng.
   Gom cụm đối xứng (symmetric clustering): nhiều nút (node) chạy ứng dụng và giám sát các nút còn lại.
 - Cấu trúc: gồm các hệ thống tính toán giao tiếp với nhau qua interconnect, giao tiếp với nhau qua storage-area network. Thì những hệ thống gom cụm được sử dụng trong cloud computing và các nhà cung cấp dịch vụ về lưu trữ hiện nay như AWS,...
+IV. Các thao tác trong hệ điều hành:
+- Chương trình Bootstrap - đoạn code đơn giản trong firmware của phần cứng máy tính để khởi dộng hệ thống, nạp nhân.
+- Nạp nhân.
+- Khởi động hệ thống nền (các dịch vụ bên ngoài nhân).
+- Điều khiển ngắt của nhân (phần cứng và phần mềm).
++ Ngắt phần cứng.
++ Ngắt phần mềm (ngoại lệ hoặc bẫy):
+  Lỗi phần mềm (ví dụ phép chia cho 0).
+  Yêu cầu các dịch vụ của hệ điều hành - system call.
+  Những vấn đề khác bao gồm vòng lặp vô hạn, các quy trình sửa đổi lẫn nhau hoặc hệ điều hành.
+- Đơn chương (uniprogramming), đa chương (multiprogramming) và đa nhiệm (multitasking).
+- Các chế độ hoạt động (modes of operation).
+- Timer.
+4.1. Đơn chương:
+- Chỉ có một công việc (job)/chương trình được nạp vào bộ nhớ tại một thời điểm.
+- Công việc/chương trình được thi hành tuần tự.
+4.2. Đa chương:
+- Đa chương tổ chức các công việc, bao gồm mã và dữ liệu, sao cho CPU luôn có thể chọn 1 để thực thi:
++ Nhiều công việc được nạp đồng thời vào bộ nhớ.
++ Một công việc được chọn và chạy bởi bộ định thời công việc (job scheduling).
++ Khi một công việc phải chờ, hệ điều hành chuyển sang (switch) thực thi công việc khác.
+- Trong hệ thống đa chương, một công việc đang thực thi được gọi là một tiến trình (process).
+- Đa chương giúp tận dụng được thời gian rảnh, tăng hiệu suất sử dụng CPU (CPU utilization).
+- Mô hình cấu trúc bộ nhớ: dành 1 phần cho hệ điều hành, phần còn lại nạp vào. Khi các chương trình được nạp vào, thì được sắp xếp trong cấu trúc bộ nhớ, CPU thực thi từng chương trình đến khi kết thúc tác vụ hay thực hiện I/O.
+- Đa nhiệm là một sự mở rộng của đa chương - CPU chuyển các công việc thường xuyên hơn để người dùng có thể tương tác với từng công việc khi nó đang chay.
+Ví dụ: Có thể mở cùng lúc nhiều chương trình cùng 1 lúc: có thể nghe nhạc, đánh văn bản,...
+4.3. Các chế độ hoạt động:
+- Việc có nhiều chế độ hoạt động cho phép hệ điều hành bảo vệ chính nó và các thành phần khác của hệ thông.
++ Hai chế độ cơ bản: Chế độ người dùng (user mode) và chế độ hạt nhân (kernel mode).
++ Có thể mở rộng nhiều hơn 2 chế độ.
+- Bit chế độ được thêm vào phần cứng:
++ Dùng để phân biệt khi nào thì hệ thống đang thực thi mã người dùng hay mã hạt nhân.
++ Khi một ứng dụng của người dùng thực thi thì bit chế độ là 'người dùng'.
++ Khi mã trong hạt nhân thực thi thì bit chế độ là 'hạt nhân'.
+- Một số lệnh được thiết kế như đặc quyền (priviledged), các lệnh này chỉ thực thi ở chế độ hạt nhân.
+- Chuyển chế độ người dùng sang chế độ hạt nhân: Khi user đang thực thi tiến trình người dùng và trong quá trình thực thi user, có gọi system call tới kernel sẽ có 1 cái trap sẽ chuyển mode thành 0 và chuyển mode bit kernel và xong thì mode bit là 1 và thành chế độ người dùng.
+4.4. Timer:
+- Timer được sử dụng để ngăn vòng lặp vô hạn hoặc tiến trình chiếm dụng quá nhiều tài nguyên (resource hog).
++ Dùng timmer để ngắt máy tính sau một khoảng thời gian:
+  Timer có thể cài đặt gồm một bộ đếm và giá trị clock cố định.
+  Hệ điều hành thiết lập giá trị bộ đếm bằng các lệnh đặc quyền.
+  Mỗi khi clock tick, giá trị bộ đếm giảm dần.
+  Bộ đếm bằng 0 sẽ phát sinh một ngắt.
+  Quyền điều khiển sẽ tự động chuyển về cho hệ điều hành khi ngắt được kích hoạt.
