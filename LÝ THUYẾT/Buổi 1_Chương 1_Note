@@ -53,3 +53,33 @@ Khi có 1 input/output request, nó sẽ thực thi cái mode là transfering, l
 + Xác định loại ngắt đã xảy ra.
 + Thực thi mã xử lý tương ứng với từng loại ngắt.
 - Khi CPU đang chạy, nó có 1 break khởi tạo, thì sau đó nó khởi tạo input/output tương ứng với cái break đó. Khi cái hoạt động output/input xảy ra (khi input ready, output hoàn thành hoặc có 1 cái lỗi gì đó xảy ra trong quá trình đó) sẽ tạo ra 1 interrupt signal thì trong quá trình I/O hoạt động thì CPU thực thi kiểm tra interrupt giữa các lệnh và khi mà CPU nhận được interrupt thì nó sẽ chuyển quyền điều khiển tới interrupt handler. Sau đó thì interrupt handler sẽ xử lý dữ liệu liên quan tới ngắt, sau đó thì CPU resume lại công việc trước khi ngắt xảy ra.
+2.2. Cấu trúc lưu trữ (storage):
+- Hệ thống lưu trữ được tổ chức phân cấp dựa trên:
++ Tốc độ truy xuất (speed).
++ Chi phí (cost).
++ Khả năng lưu trữ dữ liệu khi không có nguồn điện (volatility).
+- Phân cấp lưu trữ:
++ Càng về trên thì thời gian truy xuất càng nhanh và khả năng lưu trữ càng nhỏ và ngược lại.
++ Có 2 loại: 
+  Khả biến (Bay hơi) (Main memory, Cache, Registers), khi mà ta tắt máy thì không lưu trữ dữ liệu nữa.
+  Bất khả biến (Secondary Storage): có thể lấy ra được khỏi máy: như đĩa quang, đĩa từ.
++ Ở đỉnh là Register, nằm bên trong CPU, nhanh nhất, có dung lượng nhỏ.
++ Cache trong CPU, là bộ nhớ đệm, có 3 cấp độ L1, L2, L3.
++ Main memory (D-RAM): khoảng 4GB, 8GB, 16GB, 32GB.
++ Không bay hơi: SSD, HDD, lưu trữ hệ điều hành, các file.
+- Bộ nhớ chính (main memory) - thiết bị lưu trữ dung lượng lớn duy nhất mà CPU truy xuất trực tiếp.
++ Truy xuất ngẫu nhiên (Random Access).
++ Mất dữ liệu khi không có nguồn điện.
++ Được xây dựng dựa trên công nghệ bán dẫn Dynamic Random-Access Memory (DRAM).
+- Bộ nhớ thứ cấp (secondary storage) - mở rộng cho bộ nhớ chính để cung cấp khả năng lưu trữ không bay hơi dung lượng lớn.
+2.3. Cấu trúc nhập/xuất:
+- Cách 1: Sau khi nhập/xuất bắt đầu, quyền điều khiển chỉ được trả lại chương trình người dùng khi nhập/xuất hoàn tất.
++ Sử dụng ngắt để xử lý.
++ Chỉ một yêu cầu nhập/xuất được xử lý tại một thời điểm.
++ CPU phải chờ đến khi ngắt kế tiếp được phát sinh.
++ Chỉ phù hợp cho việc di chuyển một lượng nhỏ dữ liệu.
+- Cách 2: Sau khi nhập/xuất bắt đầu, quyền điều khiển trả lại chương trình người dùng mà không cần chờ nhập/xuất hoàn tất.
++ Sử dụng cơ chế truy xuất một bộ nhớ trực tiếp (direct memory access - DMA).
++ Không cần sử dụng CPU.
++ Thích hợp cho việc di chuyển lượng lớn dữ liệu.
+- Khi CPU phát ra 1 yêu cầu đọc dữ liệu, có 2 cách, 1 là dữ liệu giao tiếp trục tiếp với CPU, 2 là dữ liệu giao tiếp trực tiếp với memory qua cơ chế DMA, di chuyển CPU thông qua Cache. Và trong quá trình đó thì các lệnh vẫn thực thi qua chu kỳ đó.
