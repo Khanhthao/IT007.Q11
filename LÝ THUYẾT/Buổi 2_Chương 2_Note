@@ -119,3 +119,83 @@ II. Các dịch vụ hệ điều hành cung cấp:
 + Giao diện Graphics User Interface (GUI).
 + Giao diện Touch-screen.
 III. Lời gọi hệ thống:
+- Có 2 mode: user mode và kernel mode.
+- Khi một tiến trình người dùng user process dùng user mode, muốn sử dụng phần cứng bên dưới thì gọi system call.
+- Khi một system call được gọi thì nó sẽ chuyển sang cái mode kernel, thực thi system call rồi trả kết quả cho user process.
+- Dùng để giao tiếp giữa tiến trình và hệ điều hành hay nói cách khác là cung cấp giao diện giữa tiến trình và hệ điều hành bằng cách gọi đến các dịch vụ mà hệ điều hành cung cấp.
++ Ví dụ: open, read, write file.
+- Thông thường được viết bằng ngôn ngữ cấp cao (C/C++) và hầu hết được truy cập thông qua các Application Programming Interface (API).
+- Có 3 APIs thông dụng là Win32 API cho Windows, POSIS API cho POSIX-based systems (bao gồm tất cả các phiên bản UNIX, Linux và Mac OS X), và Java API cho các máy ảo Java (JVM)>
+- Ba phương pháp truyền tham số khi sử dụng system call:
++ Qua thanh ghi.
++ Qua một vùng nhớ, địa chỉ của vùng nhớ được gởi đến hệ điều hành qua thanh ghi.
++ Qua stack.
+- Khi một ứng dụng của người dùng muốn mở 1 file nào đó thì nó sẽ gọi một file là open() ở đây, system call thông qua system call interface để chuyển xuống kernel mode và chuyển xuống system call open.
+- Truyền tham số: Vd tham số truyền vào 13 là X là tham số cho system call, user mode load địa chỉ vào thanh ghi, sử dụng các tham số từ cái table X (vị trí ô nhớ mà tham số năm ở đó) 
+- Để tạo một tiến trình: Windows (CreateProcess) còn Linux thì khác.
+---QUIZ---
+Câu 1: Phương pháp qua thanh ghi, qua stack, qua một vùng nhớ, địa chỉ của vùng nhớ được gửi đến hệ điều hành qua thanh ghi, qua message thì phương pháp nào không phải là phương pháp truyền tham số khi sử dụng lời gọi hệ thống?
+Answer key: Qua message.
+Câu 2: Để giao tiếp giữa tiến trình về hệ điều hành thì dùng?
+Answer key: Lời gọi hệ thống.
+IV. Các chương trình hệ thống:
+- Bao gồm các system call bên trong để thực hiện các tác vụ nào đó.
+- Chương trình hệ thống (system program, phân biệt với application program) gồm:
++ Quản lý hệ thống file: như create, delete, rename, list.
++ Thông tin trạng thái: như date, time, dung lượng bộ nhớ trống.
++ Soạn thảo file: như file editor.
++ Hỗ trợ ngôn ngữ lập trình: như compiler, assembler, interpreter.
++ Nạp, thực thi, giúp tìm lỗi chương trình: như loader, debugger.
++ Giao tiếp: như email, task, web browser...
+- Người dùng chủ yếu làm việc thông qua các system program (không làm việc trực tiếp với các system call).
+V. Cấu trúc của hệ điều hành:
+- Hệ điều hành là một chương trình.
+- Nó có nhiều dạng cấu trúc khác nhau:
++ Cấu trúc Monolithic - Original UNIX.
++ Cấu trúc Layered Approach.
++ Cấu trúc Microkernels.
++ Cấu trúc Modules.
++ Cấu trúc Hybrid Systems.
+V.1. Cấu trúc Monolithic - Original UNIX.
+- UNIX - do giới hạn về chức năng phần cứng nên Original UNIX cũng có cấu trúc rất giới hạn.
+- Gồm 2 nhân tách rời nhau:
++ Nhân (cung cấp file system, CPU Scheduling, memory management, và một số chức năng khác).
++ System program.
+V.2. Cấu trúc Layered Approach:
+- Hệ điều hành được chia thành nhiều lớp (layer):
++ Lớp dưới cùng: hardware.
++ Lớp trên cùng là giao tiếp với user.
++ Lớp trên chỉ phụ thuộc lớp dưới.
++ Một lớp chỉ có thể gọi các hàm của lớp dưới và các hàm của nó được gọi bởi lớp trên.
++ Ví dụ: Hệ điều hành THE.
+V.3. Cấu trúc Microkernel:
+- Phân chia module theo microkernel (CMU Mach OS, 1980).
+- Chuyển một số chức năng của OS từ kernel space sang user space.
+- Thu gọn kernel -> microkernel, microkernel chỉ bao gồm các chức năng tối thiểu như quản lý tiến trình, bộ nhớ và cơ chế giao tiếp giữa các tiến trình.
+- Giao tiếp giữa các user mode qua cơ chế truyền thông điệp., thông qua message.
+V.4. Cấu trúc Modules:
+- Nhiều hệ điều hành hiện đại triển khai các loadable kernel modules (LKMs).
++ Sử dụng cách tiếp cận hướng dối tượng.
++ Mỗi core thành phần là tách biệt nhau.
++ Trao đổi thông qua các interfaces.
++ Mỗi module như là một phần của nhân.
+- Nhìn chung, cấu trúc Modules giống với cấu trúc Layer nhưng phức tạp, ví dụ như Linux, Solaries.
+- Linux dựa theo cấu trúc monolithic được thiết kế theo dạng Modules.
++ Bao gồm các applications bên trên kernels dưới, giao tiếp qua system call interfaces để giao tiếp với hardware thông qua device drivers.
+V.5. Cấu trúc Hybrid Systems:
+- Hầu hết các hệ điều hành hiện đại không theo một cấu trúc thuần túy nào mà lai giữa các cấu trúc với nhau:
++ Cấu trúc lai là sự kết hợp nhiều cách tiếp cận để giải quyết các nhu cầu về hiệu suất, bảo mật, nhu cầu sử dụng.
++ Nhân Linux, Solaries theo cấu trúc kết hợp không gian địa chỉ kernel, cấu trúc Monolithics và Modules.
++ Nhân Windows hầu như theo cấu trúc liền khối, cộng với cấu trúc vi nhân cho các hệ thống cá nhân khác nhau.
+- MacOS, iOS: bên trên là application, tiếp theo là những cái user experience, application framework, core frameworks, kernel environment (Darwin).
+- Cấu trúc Darwin: bao gồm BSD (POSIX) system calls, kernel sẽ có thành phần quan trọng như scheduling, IPC (giao tiếp giữa các tiến trình với nhau), memory managemnent.
+- Kiến trúc Android:
++ Được phát triển bởi Open Handset Aliance (Google).
++ Được phát triển dựa trên nhân Linux.
++ Môi trường chạy bao gồm tập các thư viện API và máy ảo ART VM.
++ Thư viện bao gồm các frameworks cho web browser, database, multimedia,...
+---QUIZ---
+Câu 1: Hệ điều hành được xây dựng theo cấu trúc phân lớp (layer) KHÔNG có đặc điểm nào dưới đây?
+Answer key: Các lớp giao tiếp với nhau qua cơ chế truyền thông điệp.
+Câu 2: Đặc điểm nào dưới đây là cấu trúc vi nhân (microkernels):
+Answer key: Một số chức năng của hệ điều hành được chuyển từ kernel space sang user space. \
