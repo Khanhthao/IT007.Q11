@@ -21,3 +21,101 @@ Câu 1: Để hoàn thành công việc, một tiến trình KHÔNG bắt buộc
 Answer key: Màn hình.
 Câu 2: Theo nội dung video bài giảng về các thành phần trong hệ điều hành mà ban vừa xem, thì thành phần nào sau đây không phải là 1 thành phần của hệ điều hành: Hệ thống bảo vệ, Quản lý tiểu trình, Quản lý tiến trình và Quản lý file?
 Answer key: Quản lý tiểu trình.
+1.2. Quản lý bộ nhớ chính:
+- Trong sơ đồ phân cấp bộ nhớ: Kích thước nhỏ dần thì tốc độ nhanh dần.
+- Bộ nhớ khả biến và bộ nhớ bất biến.
+- Register (tập thanh ghi): nằm bên trong CPU và được cấu tạo bằng các flipflop khác nhau, bộ phận để lưu trữ các dữ liệu tính toán trực tiếp.
+- Cache là bộ nhớ, nằm giữa Register và Main memory, khá giới hạn (trên dưới 8MB).
+- Main memory (D-RAM)
+- Bộ nhớ bất biến: ổ cứng SSD, HDD (không lấy ra được), đĩa từ, đĩa quang (lấy ra được) để cài đặt hệ điều hành, các chương trình trên nó.
+- Resource monitor: coi được rõ ràng các tiến trình đang hoạt động.
+- Bộ nhớ chính là trung tâm của các thao tác, xử lý.
+- Để nâng cao hiệu suất sử dụng CPU. hệ điều hành cần quản lý bộ nhớ thích hợp.
+- Các nhiệm vụ chính: 
++ Theo dõi, quản lý các vùng nhớ trống và đã cấp phát.
++ Quyết định sẽ nạp chương trình vào vị trí nào khi có vùng nhớ trống.
++ Cấp phát và thu hồi các vùng nhớ.
+---QUIZ---
+Câu 1: Quyết định sẽ nạp chương trình nào khi có vùng nhớ trống là chức năng của thành phần nào trong hệ điều hành?
+Answer key: Quản lý bộ nhớ chính.
+Câu 2: Chọn đáp án đúng theo thứ tự tăng dần về tốc độ truy cấp của bộ nhớ?
+Answer key: HDD, SSD, RAM, Cache.
+1.3. Quản lý file:
+- Hệ thống file: file và thư mục.
+- Các dịch vụ chinh:
++ Tạo và xóa file/thư mục.
++ Các thao tác xử lý file/thư mục như copy, paste...
++ "Ánh xạ" file/thư mục vào thiết bị thứ cáp tương ứng.
++ Sao lưu và phục hồi dữ liệu.
+1.4. Quản lý hệ thống I/O:
+- Thể hiện qua cửa sổ Device Manager.
+- Che dấu sự khác biệt của các thiết bị I/O trước người dùng.
+- Các chức năng:
++ Cơ chế: buffering (khi giao tiếp với phần cứng với tốc độ thấp và cao thì nó buffer những dữ liệu dạng tuần tự để nó đẩy qua phần cứng có tốc độ nhanh hơn 1 lần)
++ Cơ chế: spoiling (cũng giao tiếp, có 1 vùng spoil trên lưu trữ thứ cấp để nó lưu dữ liệu trước khi giao tiếp với các thiết bị nhanh hơn).
++ Cơ chế: caching (có thể thực thi trong nhiều kiến trúc khác nhau, processor nó muốn truy xuất 1 dữ liệu trên RAM thì nó sẽ cache lại số dữ liệu mà nó thường sử dụng trên bộ nhớ cache để lần sau truy xuất nhanh hơn).
++ Cung cấp giao diện chung đến các trình điều khiển thiết bị.
++ Bộ điều khiển các thiết bị phần cứng tương ứng.
+1.5. Quản lý hệ thống lưu trữ thứ cấp:
+- Hiển thị qua Disk Manager.
+- Lý do phải quản lý ổ đĩa:
++ Bộ nhớ chính: kích thước nhỏ, là môi trường chứa thông tin không bên vứng
+-> cần hệ thống lưu trữ thứ cấp để lưu trữ bền vững các dữ liệu, chương trình.
+- Phương tiện lưu trữ thông dụng là HDD và SSD.
+- Nhiệm vụ của hệ điều hành trong quản lý đĩa:
++ Quản lý không gian trống trên đĩa (free space management).
++ Cấp phát không gian lưu trữ (storage allocation).
++ Định thời hoạt động cho đĩa (disk scheduling).
+--> Sử dụng thường xuyên --> Ảnh hưởng lớn đến tốc độ của cả hệ thống -> cần hiệu quả.
+1.6. Hệ thống bảo vệ:
+- Tốn tại ở như là Windows Security bảo vệ khỏi virus, khỏi các phần mền độc hại.
+- Trong hệ thống cho phép nhiều user hay nhiều process diễn ra đồng thời:
++ Kiểm soát tiến trình người dùng đăng nhập/đăng xuất và sử dụng hệ thống.
++ Kiểm soát việc truy cập các tài nguyên trong hệ thống.
++ Bảo đảm những user/process chỉ được phép sử dụng các tài nguyên dành cho nó.
+- Các nhiệm vụ của hệ thống bảo vệ:
++ Cung cấp cơ chế kiểm soát đăng nhập/xuất.
++ Phản định được sự truy cập tài nguyên hợp pháp và bất hợp pháp.
++ Phương diện thi hành các chính sách (enforcement of policies).
+1.7. Hệ thống thông dịch lệnh:
+- Command prompt.
+- Là giao diện chủ yếu giữa người dùng và OS.
+- Khi user login:
++ command line interpreter (shell) chạy, chờ nhận lệnh từ người dùng, thực thi lệnh và kết quả trả về.
++ Các lệnh -> bộ điều khiển lệnh -> hệ điều hành.
++ Các lệnh chủ yếu:
+. Tạo, hủy và quản lý tiến trình, hệ thống.
+. Kiểm soát I/O.
+. Quản lý bộ lưu trữ thứ cấp.
+. Quản lý bộ nhớ chính.
+. Truy cập hệ thống file và cơ chế bảo maatsh.
+---QUIZ---
+Câu 1: Hệ thống thông dịch lệnh (Shell/Terminal) là gì?
+Answer key: Là giao diện chủ yếu giữa người dùng và hệ điều hành.
+Câu 2: Cung cấp giao diện chung đến các trình điều khiển thiết bị là chức nawg của thành phần nào trong hệ điều hành?
+Answer key: Quản lý hệ thống I/O.
+II. Các dịch vụ hệ điều hành cung cấp:
+- Thực thi chương trình.
+- Thực hiện các thao tác I/O theo yêu cầu của chương trình.
+- Các thao tác trên hệ thống file.
+- Trao đổi thông tin giữa các tiến trình qua 2 cách:
++ Chia sẻ bộ nhớ (Shared memory).
++ Chuyển thông điệp (Message passing).
+- Phát hiện lỗi:
++ Trong CPU, bộ nhớ, trên thiết bị I/O (dữ liệu hư, hết giấy,...).
++ Do chương trình: chia cho 0, truy cập đến địa chỉ bộ nhớ không cho phép.
+- Cấp phát tài nguyên (resource allocation):
++ Tài nguyên: CPU, bộ nhớ chính, ổ đĩa,...
++ OS có cấc routine tương ứng.
+- Kế toán (accounting):
++ Nhằm lưu vết user để tính phí hoặc đơn giản để thống kê.
+- Bảo vệ (protection) và an ninh (security):
++ Hai tiến trình khác nhau không được ảnh hưởng nhau.
++ Kiểm soát được các truy xuất tài nguyên của hệ thống.
++ Chỉ cấc user được phép sử dụng hệ thống mới truy cập được tài nguyên hệ thống (ví dụ thông qua username và password).
+- Giao diện người dùng:
++ Hầu hết các hệ điều hành để có giao diện người dùng:
+. Giao diện Command-Line (CLI).
++ Giao diện Graphics User Interface (GUI).
++ Giao diện Touch-screen.
+III. Lời gọi hệ thống:
