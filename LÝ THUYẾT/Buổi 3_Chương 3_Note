@@ -5,3 +5,106 @@ I. Khái niệm cơ bản:
 - Chương trình là thực thể bị động lưu trển đĩa, tiến trình là thực thể chủ động.
 - Thực thể bị động: không gây ra thay đổi, tác động nào lên máy tính của chúng ta.
 - Thực thể chủ động: khi gọi tiến trình, tiến trình sử dụng tài nguyên trong máy tính của chúng ta.
+- Chương trình sẽ trở thành tiến trình khi một tập tin thực thi được nạp vào bộ nhớ chính (RAM).
+- Một tiến trình bao gồm:
++ Text section (program code) (chứa source code).
++ Data section (chứa global variable) (biến toàn cục).
++ Program counter (con trỏ PC trỏ tới câu lệnh chạy tiếp theo), program registers (giúp thao tác Xử lý các phép toán số học, logic)
++ Heap section (chứa bộ nhớ cấp phát động - dựa trên nhu cầu thực tế để cấp phát bộ nhớ).
++ Stack section (chứa dữ liệu tạm thời): function parameters, return address và local variable.
+- Stack và heap section có thể co giãn, heap có thể điều chỉnh theo nhu cầu, có thể dùng lệnh delete sau cấp phát động xong, hàm stack cũng tương tự.
+--- QUIZ ---
+Câu 1: 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[])
+{
+    if (argc > 2)
+        printf("Hello, %s\n", argv[1]);
+}
+Biết đoạn chương trình trên là source code của chương trình tên là test. Nếu thực thi lệnh ./test He Dieu Hanh thì chương trình sẽ ra gì?
+Answer key: Hello, He.
+Câu 2: Những phát biểu nào sau đây là đúng khi nói về tiến trình?
+A. Tiến trình không gây ra thay đổi gì trên hệ thống máy tính.
+B. Sau khi cài đặt xong, chương trình sẽ trở thành tiến trình.
+C. Tiến trình được lưu trên bộ nhớ chính.
+D. Tiến trình là thực thể chủ động.
+Answer key: C, D.
+Câu 3: Tiến trình KHÔNG bao gồm thành phần nào sau đây?
+A. Địa chỉ trả về sau hoàn tất hàm.
+B. Đoạn mã khởi động máy tính
+C. Con trỏ chỉ câu lệnh thực thi tiếp theo
+D. Các thanh ghi.
+Answer key: B.
+Câu 4: Trong các vùng nhớ sau, vùng nhớ nào có khả năng thay đổi kích thước khi tiến trình thực thi?
+A. Text section
+B. Data section
+C. Heap section
+D. Stack section.
+Answer key: C, D.
+- Các bước nạp chương trình vào bộ nhớ:
+Chương trình được viết bằng ngôn ngữ C sau đó được biên dịch qua sự hỗ trợ của Assembler hoặc Compiler thành Object modules rồi sử dụng Linker để gộp rồi tạo thành executable binary file (fie khả thực thi) đang lưu trong ổ cứng, thì dùng Loader nạp chương trình nạp lên bộ nhớ chính thì chúng ta sẽ có process image in memory.
+- Các bước khởi tạo tiến trình:
++ Cấp phát một định danh duy nhất cho tiến trình. (PID).
++ Cấp phát không gian nhớ để nạp tiến trình.
++ Khởi tạo khối dữ liệu Process Control Block (PCB) cho tiến trình.
++ Thiết lập các mối liên hệ cần thiết (ví dụ: sắp PCB vào hàng đợi định thời...)
+--- QUIZ ---
+Câu 1: Phát biểu sau Đúng (True) hay Sai (False): Một chương trình chỉ có thể tạo ra một tiến trình.
+Answer key: False.
+Câu 2: Để tạo một tiến trình, KHÔNG cần phải trải qua câc bước nào sau đây?
+A. Cấp phát không gian nhớ để nạp tiến trình
+B. Cấp phát một định danh duy nhất cho tiến trình
+C. Khởi tạo khối thanh ghi cho tiến trình
+D. Khởi tạo khối dữ liệu Process Control Block (PCB).
+Answer key: C. Khởi tạo khối thanh ghi cho tiến trình
+II. Trạng thái của tiến trình:
+- new: tiến trình vừa được tạo
+- ready: tiến trình đã có đủ tài nguyên, chỉ còn cần CPU.
+- running: các lệnh của tiến trình đang được thực thi.
+- waiting (hay blocked): tiến trình đợi I/O hoàn tất, hoặc đợi tín hiệu.
+- terminated: tiến trình đã kết thúc.
+- Chuyển dổi giữa các tiến trình: new qua admit -> ready qua dispatch -> running có thể quay lại ready nếu là interrupt hoặc I/O or event wait thành -> waiting -? ready. Nếu xong rồi thì thành exit.
+---QUIZ---
+Câu 1: Hoàn thành chuỗi chuyển trạng thái sau của một tiến trình:
+...--> Ready --> Running --> Waiting --> ... --> .... --> Terminated.
+Answer key: New --> Ready --> Running --> Waiting --> Ready --> Running --> Terminated.
+Câu 2: Tìm phát biểu SAI trong các phát biểu sau: 
+A. Có thể có nhiều process ở trạng thái READY tại một thời điểm.
+B. Có thể có nhiều process ở trạng thái RUNNING trên mỗi nhân xử lý tại một thời điểm.
+C. Khi tiến trình được cấp đủ tài nguyên và chỉ còn chờ CPU, tiến trình đó sẽ ở trạng thái READY.
+D. Tên của các trạng thái có thể khác nhau trên các hệ điều hành khác nhau nhưng bản chất trạng thái mà chúng mô tả là như nhau.
+Answer key: B. Chính xác: Tại một thời điểm, chỉ có DUY NHẤT MỘT TIẾN TRÌNH ở trạng thái RUNNING trên mỗi nhân xử lý.
+Câu 3: 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[])
+{
+    int a, b = 0, i;
+    for (i = 10; i >= 6; i--)
+    {
+        if (i % 3 == 0)
+            printf("So %d chia het cho 3\n", i);
+        else
+            a = b + i;
+    }
+    exit(0);
+}
+Cho đoạn chương trình như trong hình, hỏi sau khi kết thúc xong thì tiến trình tạo ra từ chương trình trên đã ở trạng thái bao nhiêu lần?
+Answer key: 
+Trạng thái READY: 5 lần
+Trạng thái RUNNING: 5 lần
+Trạng thái WAITING: 4 lần
+III. Process Control Block:
+- Mỗi tiến trình trong hệ thống đều được cấp phát một Process Control Block (PCB).
++ PCB là môt trong các cấu trúc dữ liệu quan trọng nhất của hệ điều hành.
+- PCB gồm:
++ Trạng thái tiến trình: new, ready, running,...
++ Bộ đếm chương trình
++ Các thanh ghi
++ Thông tin lập thời biểu CPU: độ ưu tiên,...
++ Thông tin quản lý bộ nhớ
++ Thông tin: lượng CPU, thời gian sử dụng
++ Thông tin trạng thái I/O.
