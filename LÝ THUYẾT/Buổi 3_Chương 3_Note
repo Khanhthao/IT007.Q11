@@ -1,43 +1,7 @@
+CHƯƠNG 3: QUẢN LÝ TIẾN TRÌNH
 I. Khái niệm cơ bản:
-1. Khái niệm cơ bản:
 - Một hệ điều hành thực thi chương trình như là một tiến trình.
-- Tiến trình là một chương trình đang thực thi.
-- Chương trình là thực thể bị động lưu trên đĩa (tập thi thực thi - executable file); tiến trình là thực thể chủ động (sử dụng bộ nhớ, CPU, các tài nguyên nói chung).
-- Chương trình trở thành tiến trình khi một tập tin thực thi được nạp vào bộ nhớ.
-- Một tiến trình bao gồm:
-+ Text section (program code) (lưu giữ các source code)(câu lệnh C thành mã nhị phân).
-+ Data section (chứa global variables) (biến toàn cục khai báo ngoài).
-+ Heap section (chứa bộ nhớ cấp phát động) (new).
-+ Stack section (chứa dữ liệu tạm thời).
-. Function parameters.
-. Return address.
-. Local variables.
-- Các bước nạp chương trình vào bộ nhớ:
-+ Từ source code -> Compiler/Build -> File object (nhị phân) -> Bộ linker kết hợp Object -> Loader (từ ổ cứng nạp vào trong RAM) -> Process image in memory.
-+ Khi build 1 file thì file trong ổ cứng.
-- Các bước khởi tạo tiến trình:
-+ Cấp phát một định danh duy nhất cho tiến trình.
-+ Cấp phát không gian nhớ để nạp tiến trình.
-+ Khởi tạo khối dữ liệu Process Control Block (PCB) (đóng vai trò như hồ sơ của tiến trình đó) cho tiến trình.
-+ Thiết lập các mối liên hệ cần thiết.
-2. Trạng thái tiến trình:
-- new: tiến trình vừa được tạo.
-- ready: tiến trình đã có đủ tài nguyên, chỉ còn cần CPU.
-- running: có nhu cầu sài I/O, các lệnh của tiến trình đang được thực thi.
-- waiting (hay blocked): tiến trình I/O hoàn tất, hoặc đợi tín hiệu.
-- terminated: tiến trình đã kết thúc.
-3. Process Control Block:
-- Mỗi tiến trình trong hệ thống đều được cấp phát một Process Control Block (PCB).
-+ Là một trong các cấu trúc dữ liệu quan trọng nhất của hệ điều hành.
-- PCB gồm:
-+ Trạng thái tiến trình: new, ready, running,...
-+ Bộ đếm chương trình.
-+ Các thanh ghi
-+ Thông tin lập thời biểu CPU: độ ưu tiên,...
-+ Thông tin quản lý bộ nhớ.
-+ Thông tin: lượng CPU, thời gian sử dụng.
-+ Thông tin trạng thái I/O.
-4. Định thời tiến trình:
-- Yêu cầu đối với hệ điều hành về quản lý tiến trình:
-+ Hỗ trợ sự thực thi luân phiên giữa nhiều tiến trình:
-. Hiệu
+- Tiến trình là một chương tình đang thực thi.
+- Chương trình là thực thể bị động lưu trển đĩa, tiến trình là thực thể chủ động.
+- Thực thể bị động: không gây ra thay đổi, tác động nào lên máy tính của chúng ta.
+- Thực thể chủ động: khi gọi tiến trình, tiến trình sử dụng tài nguyên trong máy tính của chúng ta.
