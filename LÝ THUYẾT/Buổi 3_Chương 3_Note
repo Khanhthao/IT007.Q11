@@ -108,3 +108,71 @@ III. Process Control Block:
 + Thông tin quản lý bộ nhớ
 + Thông tin: lượng CPU, thời gian sử dụng
 + Thông tin trạng thái I/O.
+IV. Định thời tiến trình:
+- Yêu cầu đối với hệ điều hành và quản lý tiến trình:
++ Hỗ trợ sự thực thi luân phiên giữa nhiều tiến trình:
+. Hiệu suất sử dụng CPU.
+. Thời gian đáp ứng.
++ Phân phối tài nguyên hệ thống hợp lý.
++ Tránh deadlock, trì hoãn vô hạn định.
++ Cung cấp cơ chế giao tiếp và đồng bộ hoạt động các tiến trình.
++ Cung cấp cơ chế hỗ trợ user tạo/kết thúc tiến trình.
+- Tại sao phải định thời?
++ Đa chương:
+. Có vài tiến trình chạy tại các thời điểm.
+. Mục tiêu: tận dụng tối đa CPU.
++ Chia thời:
+. User tương tác với mỗi chương trình đang thực thi.
+. Mục tiêu: tối thiểu thời gian đáp ứng.
+--- QUIZ --- 
+Câu 1: Ý nào sau đây KHÔNG phải là yêu cầu của hệ điều hành về quản lý tiến trình?
+A. Phân phối tài nguyên hệ thống hợp lý.
+B. Hô trợ sự thực thi luân phiên giữa nhiều tiến trình
+C. Cung cấp cơ chế giao tiếp và đồng bộ hoạt động các tiến trình
+D. Hỗ trợ tiến trình sử dụng CPU lâu nhất có thể.
+Answer key: D. Hỗ trợ tiến trình sử dụng CPU lâu nhất có thể.
+Câu 2: Điền vào chỗ trống:
+Hệ điều hành tổ chức các hàng đợi định thời để sắp xếp thứ tự cho các tiến trình, phần tử trong các hàng đợi định thời này chính là các ... của các tiến trình.
+Answer key: PCB.
+1. Các hàng đợi định thời:
+- Hàng đợi công việc: Job queue: chứa danh sách những tiến trình đang chờ đợi nạp vào bộ nhớ chính và thực thi công việc của mình.
+- Hàng đợi sẵn sàng: Ready queue: chứa danh sách những tiến trình đã có đầy đủ tài nguyên chỉ thiếu CPU thì bắt đầu được quá trình thực thi.
+- Hàng đợi thiết bị - Device queues.
+--- QUIZ ---
+Câu 1: Chọn phát biểu đúng khi nói về các hàng đợi định thời trong hệ điều hành?
+A. Hệ điều hành sử dụng hàng đợi định thời để sắp xếp thứ tự thực thi của các tiến trình.
+B. Khi tiến trình muốn in một dòng dữ liệu ra màn hình, nó phải chờ trong hàng đợi công việc.
+C. Hệ điều hành chỉ có 2 loại hàng đợi định thời là hàng đợi công việc và hàng đợi sẵn sàng.
+D. Hàng đợi thiết bị dùng để sắp xếp thứ tự các thiết bị sử dụng khi tiến trình thực thi.
+Answer key: A. Hệ điều hành sử dụng hàng đợi định thời để sắp xếp thứ tự thực thi của các tiến trình.
+Câu 2: Tiến trình sẽ vào trạng thái WAITING khi thực hiện NHỮNG việc nào sau đây?
+A. Tiến trình in dữ liệu ra màn hình
+B. Tiến trình thực thi sau khi tiến trình con thực thi
+C. Một ngắt xuất hiện khi tiến trình thực thi
+D. Tiến trình hết thời gian time slice.
+Answer key: A, B, C.
+2. Bộ định thời:
+- Phân loại tiến trình:
++ Các tiến trình có thể mô tả như: tiến trình I/O (tương tác với người dùng), tiến trình hướng CPU (xu hướng tương tác với CPU, đảm bảo hiệu suất).
++ Thời gian thực hiện khác nhau -> kết hợp hài hòa giữa chúng.
+- Phân loại bộ định thời:
++ Bộ định thời công việc (Job scheduler) hay bộ định thời dài (long-term scheduler).
++ Bộ định thời CPU (CPU scheduler) hay bộ định thời ngắn (short-term scheduler).
+- Bộ định thời trung gian/vừa:
++ Degree of multiprogramming: Mức độ đa chương của hệ thống dùng để chỉ số lượng tiến trình tối đa mà hệ thống có thể xử lý hiệu quả.
++ Chuyển tiến trình từ bộ nhớ sang đĩa (swap out), chuyển tiến trình từ đĩa vào bộ nhớ (swap in).
+Ban đầu có các tiến trình trong ready queue, ng dùng mún mở thêm tiến trình Pn, thì nạp vào bộ nhớ chính, nếu bộ nhớ chính đã đầy thì swap out, chuyển bớt tiến trình trong ready, nạp tiến trình mới
+-> gia tăng mức độ đa chương
+- Chuyển ngữ cảnh: Qúa trình CPU chuyển từ tiến trình này đến tiến trình khác.
+--- QUIZ ---
+Câu 1: Các bộ định thời nào sau đây có ảnh hưởng đến mức độ đa chương của hệ thống?
+A. Bộ định thời dài.
+B. Bộ định thời trung gian/vừa
+C. Bộ định thời ngắn
+Answer key: A, B.
+Câu 2: Tiến trình hướng I/O KHÔNG có đặc điểm nào sau đây?
+A. Là các tiến trình mang tính tương tác cao
+B. Yêu cầu thực thi CPU trong thời gian dài
+C. Ít tốn thời gian cho việc chuyển ngữ cảnh
+D. Dành nhiều thời gian xử lý I/O.
+Answer key: B. Yêu cầu thực thi CPU trong thời gian dài
