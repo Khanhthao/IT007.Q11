@@ -176,3 +176,109 @@ B. Yêu cầu thực thi CPU trong thời gian dài
 C. Ít tốn thời gian cho việc chuyển ngữ cảnh
 D. Dành nhiều thời gian xử lý I/O.
 Answer key: B. Yêu cầu thực thi CPU trong thời gian dài
+V. Các tác vụ đối với tiến trình:
+- Tạo tiến trình mới:
++ Một tiến trình có thể tạo nhiều tiến trình mới thông qua một lời gọi hệ thống create-process (vd: hàm fork trong Unix).
+. Ví dụ: Khi user đăng nhập hệ thống, một command interpreter (shell) sẽ được tạo ra cho user.
++ Tiến trình được tạo là tiến trình con của tiến trình tạo (tiến trình cha).
+. Quan hệ cha-con định nghĩa một cây tiến trình.
+1. Tạo tiến trình:
+- Tiến trình con nhận tài nguyên: từ OS hoặc từ tiến trình cha.
+- Chia sẻ tài nguyên của tiến trình cha:
++ Tiến trình cha và con chia sẻ mọi tài nguyên.
++ Tiến trình con chia sẻ một phần tài nguyên của cha (tài nguyên có thể là vùng nhớ, source code,...)
+- Trình tự thực thi:
++ Tiến trình cha và con thực thi đồng thời (concurrently).
++ Tiến trình cha đợi đến khi các tiến trình con kết thúc.
+- Hàm fork: Hàm tạo ra tiến trình mới:
++ Tiến trình con sao chép không gian địa chỉ của tiến trình cha -> Tiến trình con:
+. Sao chép toàn bộ source code của tiến trình cha.
+. Sao chép giá trị của các biến được tạo.
+. Bắt đầu thực thi từ vị trí mà tiến trình được tạo.
++ Giá trị trả về của hàm fork sẽ thuộc 1 trong 3 trường hợp:
+. Lớn hơn 0: cho biết đây là tiến trình cha.
+. Bằng 0: cho biết đây là tiến trình con.
+. Nhỏ hơn 0: hàm fork() thất bại.
+--- QUIZ ---
+Câu 1: Khi tiến trình thực thi hàm fork(), một tiến trình con sẽ được tạo ra giống hệt và chạy đồng thời cùng với tiến trình cha, như vậy làm thế nào có thể phân biệt đâu là tiến trình cha, đâu là tiến trình con trong source code?
+A. Sau khi tạo ra tiến trình con, tiến trình cha chờ tiến trình con kết thúc rồi mới thực thi tiếp.
+B. Sau khi được tạo ra, tiến trình con chờ tiến trình cha kết thúc kết thúc rồi mới thực thi tiếp.
+C. Dựa vào giá trị trả về của hàm fork.
+Answer key: C. Dựa vào giá trị trả về của hàm fork.
+Câu 2: Tìm nhận xét SAI trong các nhận xét sau khi nói về thao tác tạo tiến trình:
+A. Tiến trình con có thể được thực thi đồng thời cùng với tiến trình cha
+B. Tiến trình cha có thể đợi cho đến khi tiến trình con kết thúc rồi mới thực thi tiếp
+C. Tiến trình con luôn nhận tài nguyên từ hệ điều hành
+D. Tiến trình con có thể chia sẻ tài nguyên với tài nguyên
+Answer key: C. Tiến trình con luôn nhận tài nguyên từ hệ điều hành
+Câu 3: Khi sử dụng hàm fork() để tạo tiến trình con, nhận định nào sau đây là đúng?
+A. Hàm fork() luôn thực hiện thành công và trả về 2 giá trị hoặc là lớn hơn 0 hoặc là bằng 0.
+B. Source code của tiến trình cha có thể khác so với source code của tiến trình cha
+C. Tiến trình con copy toàn bộ các biến và giá trị của biến từ tiến trình cha.
+D. Tiến trình con sau khi được tạo ra sẽ bắt dầu thực thi từ đầu chương trình.
+Answer key: C. Tiến trình con copy toàn bộ các biến và giá trị của biến từ tiến trình cha.
+- Họ hàm exec() : tạo tiến trình:
++ Nạp một tác vụ mới vào không gian địa chỉ của tiến trình gọi hàm:
+. Tác vụ mới sẽ được ghi đè vào không gian địa chỉ của tiến trình.
+. Tiến trình thực thi tác vụ mới thay vì source code ban đầu.
+- Công thức:
+execl ("/bin/ls", "ls", NULL) trong đó:
+"/bin/ls": đường dẫn đến file muốn thực thi
+"ls": tham số 0 (tên tiến trình, thường trùng với tên file thực thi)
+NULL: tham số 1 (nếu không có thì là NULL), là tham số cuối cùng không có gì để liệt kê nữa.
+- Công việc của tiến trình gọi họ hàm exec() sẽ bị thay thế bởi công việc khác được chỉ định trong tham số của hàm này.
+- Về quan hệ cha con:
++ Không gian địa chỉ:
+. Không gian địa chỉ của tiến trình con được nhân bản từ cha.
+. Không gian địa chỉ của tiến trình con được khởi tạo từ template.
+- Cách tạo tiến trình fork() sẽ giúp tiến trình con nhân bản không gian địa chỉ của tiến trình cha.
+- Ví dụ trong Unix/Linux:
++ System call fork() tạo một tiến trình mới.
++ System call exec() dùng sau fork() để nạp một chương trình mới vào không gian nhớ của tiến trình mới.
+--- QUIZ ---
+Câu 1: 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+int main()
+{
+    fork();
+    fork();
+    fork();
+    fork();
+    return 0;
+}
+Cho đoạn code như trong hình, hỏi sau khi chạy xong, có tổng cộng bao nhiêu process (Kể cả process cha) được sinh ra?
+A. 8
+B. 32
+C. 4
+D. 16
+Answer key: D. 16.
+Câu 2:
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+int main ()
+{
+    int pid;
+    pid = fork();
+    return 0;
+}
+NHỮNG phát biểu nào sau đây là đúng khi thực thi tiến trình được tạo ra từ chương trình trên:
+A. Nếu giá trị của biến pid lớn hơn 0, đó chính là định danh của tiến trình con.
+B. Nếu giá trị của biến pid lớn hơn 0, đó chính lf giá trị được trả về cho tiến trình con.
+C. Biến pid đại diện cho định danh của tiến trình
+D. Tiến trình con sẽ kết thúc ngay khi vừa được tạo ra.
+Answer key: A. Nếu giá trị của biến pid lớn hơn 0, đó chính là định danh của tiến trình con.
+Chính xác: biến pid mang giá trị trả về từ hàm fork(), nếu giá trị này lớn hơn 0 thì sẽ được trả về cho tiến trình cha, mang ý nghĩa đây là định danh của tiến trình con.
+D. Tiến trình con sẽ kết thúc ngay khi vừa được tạo ra.
+Chính xác: Điều này do tiến trình con sẽ bắt đầu thực thi từ vị trí rời khỏi hàm fork(), chính là lệnh return 0 (kết thúc chương trình)
+Câu 3: Trong hệ điều hành Linux, họ hàm exec() được sử dụng để:
+A. Tạo ra một luồng mới trong tiến trình hiện tại
+B. Gửi tín hiệu dừng tới một tiến trình khác.
+C. Thay thế không gian địa chỉ của tiến trình hiện tại bằng một chương trình mới.
+D. Tạo một tiến trình mới bằng cách sao chép tiến trình cha
+Answer key: C. Thay thế không gian địa chỉ của tiến trình hiện tại bằng một chương trình mới.
+2. Kết thúc tiến trình:
+- Tiến trình tự kết thúc:
++ Tiến trình kết thúc khi thực thi lệnh cuối và gọi system routine exit.
