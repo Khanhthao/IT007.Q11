@@ -282,3 +282,113 @@ Answer key: C. Thay thế không gian địa chỉ của tiến trình hiện t�
 2. Kết thúc tiến trình:
 - Tiến trình tự kết thúc:
 + Tiến trình kết thúc khi thực thi lệnh cuối và gọi system routine exit.
+- Tiến trình kết thúc do tiến trình khác (có đủ quyền, vd: tiến trình cha của nó)
++ Gọi system routine abort với tham số là pid (process identifier) của tiến trình cần được kết thúc.
+- Hệ điều hành thu hồi tất cả các tài nguyên của tiến trình kết thúc (vùng nhớ, I/O buffer,...)
+--- QUIZ ---
+Câu 1: Điền vào chỗ trống:
+Khi tiến trình bị kết thúc, hệ điều hành sẽ ... tất cả các tài nguyên của tiến trình (như vùng nhớ, I/O,...)
+Answer key: thu hồi.
+Câu 2: Tiến trình có thể kết thúc do NHỮNG trường hợp nào sau đây?
+A. Người dùng bấm tổ hợp phím Ctrl+C khi chương trình đang thực thi
+B. Tiến trình gặp hàm exit()
+C. Tiến trình bị tiến trình con thực hiện thao tác kill
+D. Tiến trình bị tiến trình cha thực hiện thao tác abort(). 
+Answer key: A, B, D.
+VI. Cộng tác giữa các tiến trình:
+- Trong tiến trình thực thi, các tiến trình có thể cộng tác (cooperate) để hoàn thành công việc.
+- Sự cộng tác giữa các tiến trình yêu cầu hệ điều hành hỗ trợ cơ chế giao tiếp và cơ chế đồng bộ hoạt động của các tiến trình.
+- Các tiến trình cộng tác để:
++ Chia sẻ dữ liệu (information sharing).
++ Tăng tốc tính toán (computational speedup)
+. Nếu hệ thống có nhiều CPU, chia công việc tính toán thành nhiều công việc tính toán nhỏ chạy song song.
++ Thực hiện một công việc chung:
+. Xây dựng một phần mềm phức tạp bằng cách chia thành các module/process hợp tác nhau.
+1. Giao tiếp liên tiếp trình (IPC):
+- IPC (Inter Process Communication) là cơ chế cung cấp bởi hệ điều hành nhằm giúp các tiến trình:
++ Giao tiếp với nhau
++ Đồng bộ hoạt động.
+- Hai mô hình IPC: Shared memory và Message passing.
+- Shared memory: Tiến trình A có thể truy cập vào bộ nhớ chia sẻ và cả tiến trình B cũng có thể truy cập vào bộ nhớ chia sẻ.
+- Message passing: Tiến trình A và B có thể có chung message queue để chúng ta có thể truyền bit qua này.
+2. Bộ nhớ được chia sẻ - Shared memory:
+- Một vùng nhớ dùng chung (được chia sẻ chung) giữa các tiến tình cần giao tiếp với nhau.
+- Qúa trình giao tiếp được thực hiện dưới sự điều khiển của các tiến trình, không phải của hệ điều hành.
+- Cần có cơ chế đồng bộ hoạt động của các tiến trình khi chúng cùng truy cập bộ nhớ dùng chung.
+3. Hệ thống truyền thông điệp - Message passing:
+- Đặt tên (Naming):
++ Giao tiếp trực tiếp:
+. send(P, msg): gửi thông điệp đến tiến trình P.
+. receive(Q, msg): nhận thông điệp đến từ tiến trình Q.
++ Giao tiếp gián tiếp: thông qua mailbox hay port
+. send(A, msg): gửi thông điệp đến mailbox A.
+. receive(Q, msg): nhận thông điệp từ mailbox B.
+- Đồng bộ hóa (Synchronization): blocking send, nonblocking send, blocking receive, nonblocking receive.
+- Các tiến trình giao tiếp nhau thông qua vùng đệm (Buffering): dùng queue để tạm chứa các message.
++ Khả năng chứa là O (Zero capacity hay no buffering).
++ Bounded capacity: độ dài của queue là giới hạn.
++ Unbounded capacity: độ dài của queue là không giới hạn.
+--- QUIZ ---
+Câu 1: Phát biểu nào sau đây là SAI khi nói về sự cộng tác giữa các tiến trình?
+A. Các tiến trình có thể hoàn toàn làm chủ trong việc cộng tác và giao tiếp với nhau.
+B. Tiến trình cộng tác để chia sẻ dữ liệu với nhau.
+C. Việc công tác giữa các tiến trình có thể làm tăng tốc độ tính toán
+D. Tiến trình có thể thực hiện các công việc chung thông qua việc cộng tác với nhau.
+Answer key: A. Các tiến trình có thể hoàn toàn làm chủ trong việc cộng tác và giao tiếp với nhau.
+Câu 2: Đây là ưu thế của cơ chế giao tiếp truyền thông điệp (message passing) so với cơ chế bộ nhớ được chia sẻ (shared memory)?
+A. Qúa trình giao tiếp sử dụng cơ chế message passing không cần sự hỗ trợ của hệ điều hành trong khi shared memory lại cần.
+B. Các tiến trình giao tiếp qua cơ chế message passing nhanh hơn khi giao tiếp qua cơ chế shared memory.
+C. Qúa trình khởi tạo của cơ chế message passing đơn giản hơn shared memory.
+Answer key: C. Qúa trình khởi tạo của cơ chế message passing đơn giản hơn shared memory.
+Câu 3: Vấn đề nào sau đây có thể xảy ra khi thực hiện cơ chế giao tiếp shared memory?
+A. Các tiến trình cần phải nhờ sự hỗ trợ của hệ điều hành để thực hiện quá trình giao tiếp.
+B. Qúa trình các tiến trình truy cập vùng nhớ dùng chung có thể làm dữ liệu bị xung đột
+C. Bộ nhớ dùng chung không đủ lớn để chứa dữ liệu của cả 2 tiến trình
+D. Các tiến trình gặp khó khăn trong việc truy cập bộ nhớ dùng chung.
+Answer key: B. Qúa trình các tiến trình truy cập vùng nhớ dùng chung có thể làm dữ liệu bị xung đột
+VII. Tiểu trình:
+1. Tổng quan về tiểu trình:
+- Tiểu trình là một đơn vị cơ bản sử dụng CPU gồm:
++ Thread ID, PC, Registers, Stack và chia sẻ chung code, data, resources (files).
+- Các tiểu trình có thể dùng chung biến toàn cục với nhau.  Vì các tiểu trình chia sẻ vùng Data, mà vùng Data Section chính là khu vực chứa biến toàn cục.
+- Lợi ích của tiến trình đa luồng:
++ Đáp ứng nhanh: Cho phép chương trình tiếp tục thực thi khi một bộ phần bị khóa hoặc một hoạt động dài.
++ Chia sẻ tài nguyên: dễ dàng và tiết kiệm không gian nhớ.
++ Kinh tế: tạo và chuyển ngữ cảnh nhanh hơn tiến trình.
+. Ví dụ: Trong Solaris 2, tạo process chậm hơn 30 lần, chuyển chậm hơn 5 lần so với thread.
++ Khả năng mở rộng: có khả năng thực thi song song trên nhiều lõi xử lý.
+- Thực thi đồng thời: chỉ cần có single core, trong thời gian denta t thì thực thi đồng thời t1, t2, t3, t4,...
++ Nhiều công việc được phép thực thi đồng thời.
++ Trên hệ thống đơn bộ xử lý, bộ định thời được thiết kế để tạo ra cảm giác các công việc được thực thi song song nhưng thực tế chỉ có 1 công việc được thực thi tại một thời điểm.
+- Thực thi song song: nhiều core CPU
++ Thực thi nhiều công việc song song với nhau bằng cách sử dụng nhiều lõi xử lý.
+- Phân loại tiểu trình:
++ Tiểu trình người dùng:
+. Thực thi các đoạn mã trong chương trình người dùng.
+. Được quản lý mà không cần sự hỗ trợ từ hạt nhân.
++ Tiểu trình hạt nhân:
+. Thực thi các thao tác hệ thống (thông qua system call).
+. Được hỗ trợ và quản lý trực tiếp bởi hệ điều hành.
+--- QUIZ ---
+Câu 1: Các tiểu trình dùng chung và đùng riêng:
+- Dùng chung: data, files, code.
+- Dùng riêng: register, stack.
+Câu 2: Chọn phát biểu đúng khi nói về tiểu trình?
+A. Các tiểu trình có thể sử dụng chung biến cục bộ với nhau.
+B. Mỗi tiến trình chỉ có thể tạo ra một tiểu trình.
+C. Tiểu trình có thể được tạo và chuyển ngữ nhanh gấp nhiều lần so với tiến trình.
+D. Các tiểu trình có thể được quản lý thông qua PCB của tiểu trình.
+Answer key: C. Tiểu trình có thể được tạo và chuyển ngữ nhanh gấp nhiều lần so với tiến trình.
+Câu 3: Ý nào sau đây KHÔNG phải là lợi ích của tiến trình đa luồng>
+A. Các tiểu trình có thể tiết kiệm được không gian nhớ nhờ chia sẻ code, data, files.
+B. Các tiểu trình có thể được thực thi trên nhiều lõi xử lý khác nhau.
+C. Việc tạo và chuyển ngữ ảnh giữa các tiểu trình diễn ra nhanh hơn so với tiến trình.
+D. Các tiểu trình có thể chia sẻ dữ liệu trong các thanh ghi để gia tăng hiệu quả công việc.
+E. Tiến trình vẫn có thể thực thi kể cả khi một tiểu trình bị khóa.
+Answer key: D. Các tiểu trình có thể chia sẻ dữ liệu trong các thanh ghi để gia tăng hiệu quả công việc.
+2. Các mô hình đa tiểu trình:
+- Nhiều - Một (Many-to-One)
+- Một - Một (One-to-One)
+- Nhiều - Nhiều (Many-to-Many)
+- Mô hình Nhiều - Một (Many-to-One)
++ Nhiều tiến trình người dùng được ánh xạ đến một tiểu trình hạt nhân.
