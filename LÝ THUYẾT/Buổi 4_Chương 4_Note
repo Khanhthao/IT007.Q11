@@ -1,0 +1,186 @@
+CHƯƠNG IV: ĐỊNH THỜI CPU
+I. Các khái niệm cơ bản về định thời:
+- Trong các hệ thống đa nhiệm (multitasking), đơn vị xử lý:
++ Cho phép thực thi đồng thời nhiều chương trình để làm tăng hiệu suất hệ thống (Cho phép nhiều chương trình được nạp vào bộ nhớ).
++ Tại mỗi thời điểm, chỉ có một tiến trình được thực thi.
+- Cần giải quyết vấn đề phân chia, lựa chọn tiến trình thực thi để đạt được hiệu quả cao nhất.
+- Cần có những phương pháp chọn lựa phù hợp.
+--> Định thời là chiến lược lựa chọn tiến trình phù hợp để được thực thi sao cho đạt được hiệu quả cao nhất.
+- Chu kỳ CPU/IO:
++ Service time  là thời gian một tiến trình cần CPU trong một chu kỳ CPU - I/O (hay còn gọi là burst time).
++ Tiến trình có service time lớn được gọi là các tiến trình hướng CPU (CPU-bound process).
+- Tiến trình hướng CPU (CPU-bound):
++ Tiến trình yêu cầu thời gian thực thi trên CPU nhiều.
++ Thời gian hoàn thành chương trình phụ thuộc vào tốc độ thực thi của CPU. 
+- Tiến trình hướng I/0 (I/O-bound):
++ Tiến trình yêu cầu thời gian thực thi trên ngoại vi nhiều hơn.
++ Thời gian hoàn thành chương trình phụ thuộc chu kỳ đợi cho các thao tác nhập/xuất.
+--- QUIZ ---
+Câu 1: NHỮNG phát biểu nào sau đây là đúng?
+A. Việc định thời tiến trình cần đảm bảo sao cho các tiến trình hướng I/O tương tác tốt với người dùng.
+B. Tiến trình hướng I/O là tiến trình dành phần lớn thời gian để thực hiện việc đọc dữ liệu từ bộ nhớ.
+C. Việc định thời tiến trình cần ưu tiên cho các tiến trình hướng CPU để tận dụng tốt nhân xử lý.
+D. Tiến trình hướng CPU là tiến trình phần lớn thời gian để thực hiện các thao tác tính toán.
+Answer key: A, D.
+Câu 2: Chọn phát biểu sai trong các phát biểu sau đây?
+A. Khi thực thi, tiến trình sẽ thay đổi qua lại giữa 2 trạng thái là CPU Burst và I/O Burst.
+B. Trong hệ thống đa chương, khi tiến trình thực hiện xử lý I/O đồng nghĩa với việc tiến trình từ bỏ CPU và tiến trình khác có thể được sử dụng CPU và thực thi.
+C. Thông thường, tiến trình sẽ bắt đầu bằng trạng thái I/O Burst và kết thúc bằng CPU Burst.
+D. Trong hệ thống đa chương, hệ điều hành cần lựa chọn tiến trình nào được nhận CPU và thực thi thông qua việc định thời.
+Answer key: C. Thông thường, tiến trình sẽ bắt đầu bằng trạng thái I/O Burst và kết thúc bằng CPU Burst.
+Câu 3: Phát biểu sau Đúng hay Sai:
+Theo đo lường trên quy mô lớn, thông thường tần suất tiến trình sử dụng CPU trong thời gian ngắn sẽ nhiều hơn rất nhiều lần tần suất tiến trình sử dụng CPU trong thời gian dài.
+A. True 
+B. False
+Answer key: A. True.
+II. Các loại định thời:
+--- QUIZ ---
+Câu hỏi: Trong các bộ định thời, bộ định thời nào ảnh hưởng đến mức độ đa chương của hệ thống:
+A. Bộ định thời ngắn
+B. Bộ định thời trung gian
+C. Bộ định thời dài
+Answer key: B, C.
+1. Định thời dài (Long-term Scheduling):
+- Xác định chương trình nào được chấp nhận nạp vào hệ thống để thực thi.
+--> Điều khiển mức độ đa chương của hệ thống.
+- Định thời dài thường cố gắng duy trì xen lẫn giữa tiến trình hướng CPU (CPU-bound process) và tiến trình I/O (I/O-bound process).
+2. Định thời vừa (Medium-term Scheduling):
+- Định thời vừa quyết định tiến trình nào được đưa vào (swap in) và đưa ra khỏi (swap out) bộ nhớ chính trong quá trình thực thi của hệ thống.
+- Được thực hiện bởi thành phần quản lý bộ nhớ.
+3. Định thời ngắn (Short-term Scheduling):
+- Còn được gọi là định thời CPU.
+- Xác định tiến trình nào trong hàng đợi sẵn sàng (ready queue) sẽ được chiếm CPU để thực thi kế tiếp.
+- Đối với hệ thống hỗ trợ nhân đa luồng (multithreaded kernel), việc định thời CPU là do OS chọn kernel thread được chiếm CPU.
+- Bộ định thời ngắn được gọi khi có một trong các sự kiện/interrupt sau xảy ra:
++ Ngắt thời gian (clock interrupt).
++ Ngắt ngoại vi (I/O interrupt).
++ Lời gọi hệ thống (operating system call).
++ Tín hiệu đồng bộ hóa.
+- Bộ định thời sẽ chuyển quyền điều khiển CPU về cho tiến trình được chọn.
+- Qúa trình chuyển đổi bao gồm:
++ Chuyển ngữ cảnh (sử dụng thông tin ngữ cảnh trong PCB).
++ Chuyển chế độ người dùng.
++ Nhảy đến vị trị thích hợp trong chương trình ứng dụng để khởi động lại chương trình (sử dụng thông tin địa chỉ tại program counter trong PCB).
+- Công việc này gây ra phí tổn:
++ Dispatch latency: thời gian mà bộ định thời dừng một tiến trình và khởi động một tiến trình khác.
+--- QUIZ ---
+Câu 1: Bộ định thời dài thực hiện CÁC công việc nào sau đây?
+A. Quyết định tiến trình nào phải tạm thời di chuyển ra bộ nhớ thứ cấp.
+B. Cố gắng duy trì xen lẫn giữa CPU-bound process và I/O-bound process.
+C. Quyết định tiến trình nào được chuyển trạng thái từ Ready thành Running.
+D. Quyết định nạp tiến trình vào trong bộ nhớ chính.
+Answer key: B, D.
+Câu 2: Bộ định thời trung gian thực hiện việc di chuyển tiến trình vào/ra bộ nhớ chính và bộ nhớ thứ cấp nhờ cơ chế nào sau đây?
+A. Push và Pop
+B. Swap in và swap out
+C. Turn in và Turn out
+D. Remove and Recover.
+Answer key: B. Swap in và Swap out
+Câu 3: Trong các loại bộ định thời, loại nào thực hiện "định thời CPU"?
+A. Bộ định thời trung gian
+B. Bộ định thời ngắn
+C. Bộ định thời dài
+Answer key: B. Bộ định thời ngắn
+III. Các tiêu chuẩn định thời CPU:
+- Hướng người dùng (user-oriented):
++ Thời gian đáp ứng (Response time): khoảng thời gian từ lúc tiến trình gửi yêu cầu thực thi đến khi yêu cầu được đáp ứng lần đầu tiên (trong các hẹ thống time-sharing, interactive system) --> cực tiểu.
++ Thời gian hoàn thành (Turnaround time): khoảng thời gian từ lúc một tiến trình được nạp vào hệ thống đến khi tiến trình đó kết thúc --> cực tiểu.
++ Thời gian đợi (Waiting time): tổng thời gian một tiến trình đợi trong ready queue --> cực tiểu.
+- Cách xác định các thông số định thời: 
+Giả sử: 
++ Qúa trình thực thi một tiến trình P gầm nhiều phần.
++ r là thời điểm xuất hiện của P trong hệ thống.
++ t0 là thời điểm P được thực thi lần đầu tiên.
++ f là thời điểm tiến trình P hoàn thành việc thực thi (Finishing Time).
+Gọi R, F, và W lần lượt là thời gian đáp ứng, thời gian hoàn thành và thời gian đợi của tiến trình P.
+Khi đó: R = t0-r, F=f-r, W=f-r-E= F-E
+Trong đó: E là thời gian yêu cầu của P để thực thi trên CPU (hay CPU Burst):
+E=E1+E2+E3.
+- Hướng hệ thống (System-oriented):
++ Hiệu năng sử dụng CPU (processor utilization): định thời sao cho CPU càng bận càng tốt --> cực đại.
++ Tính công bằng (fairness): tất cả tiến trình phải được đối xử như nhau.
++ Thông lượng (throughout): số tiến trình hoàn tất công việc trong một đơn vị thời gian --> cực đại.
+--- QUIZ ----
+Câu 1: Trong các tiêu chuẩn sau, đâu là tiêu chuẩn định thời theo hướng hệ thống?
+A. Số tiến trình hoàn thành trong một đơn vụ thời gian là nhiều nhất.
+B. Thời gian hoàn thành ngắn nhất
+C. Các tiến trình được phân chia thời gian sử dụng CPU công bằng
+D. CPU bận rộn nhất
+E. Số tiến trình hoàn thành trong một đơn vị thời gian là ít nhất
+F. CPU trống nhiều nhất.
+G. Thời gian chờ ngắn nhất
+H. Thời gian đáp ứng ngắn nhất
+Answer key: A, C, D.
+Câu 2: Trong các tiêu chuẩn sau, đâu là tiêu chuẩn định thời theo hướng người dùng?
+A. Thời gian hoàn thành ngắn nhất.
+B. Số tiến trình hoàn thành trong một đơn vị thời gian là nhiều nhất
+C. CPU trống nhiều nhất
+D. Thời gian đáp ứng ngắn nhất
+E. Thời gian chờ ngắn nhất
+F. CPU bận rộn nhất
+G. Các tiến trình được phân chia thời gian sử dụng CPU công bằng nhất
+H. Số tiến trình hoàn thành trong một đơn vị thời gian là ít nhất.
+Answer key: A, D, E
+IV. Các giải thuật định thời:
+1. Giải thuật định thời:
+Một giải thuật định thời thông thường bao gồm 2 yếu tố:
+- Hàm chọn lựa (selection function): mô tả cách thức (căn cứ) để chọn tiến trình nào trong ready queue được thực thi (Các hàm chọn lựa thường được xây dựng dựa trên độ ưu tiên, yêu cầu về tài nguyên, đặc điểm thực thi của tiến trình,...)
+- Chế độ quyết định (decision mode): quyết định thời điểm thực hiện hàm chọn lựa để định thời.
+- Các chế độ quyết định:
++ Không trưng dụng (Non-preemptive):
+. Khi ở trạng thái running, tiến trình sẽ thực thi cho đến khi kết thúc hoặc bị ngắt (blocked) do yêu cầu I/O.
++ Trưng dụng (Preemptive):
+. Tiến trình đang thực thi (ở trạng thái running) có thể bị ngắt giữa chừng và chuyển về trạng thái ready.
+. Chi phí cao hơn chế độ không trưng dụng nhưng đanh đổi lại bằng thời gian đáp ứng tốt hơn vì không có trường hợp một tiến trình độc chiếm CPU quá lâu.
+- Thời điểm thực thi hàm chọn lựa:
++ Hàm chọn lựa được thực thi vào các thời điểm sau:
+(1): Có tiến trình chuyển từ trạng thái running sang waiting.
+(2): Có tiến trình chuyển từ trạng thái running sang ready.
+(3): Có tiến trình chuyển từ trạng thái waiting, new sang ready.
+(4): Kết thúc thực thi của một tiến trình
+-> (1) và (4) không cần lựa chọn loại định thời, (2) và (3) thì cần:
+. Việc thực thi hàm chọn lựa trong trường hợp (1) và (4) không phụ thuộc vào loại giải thuật định thời và thường áp dụng chế độ trưng dụng.
+. Ngược lại, trường hợp (2) và (3) phụ thuộc vào loại giải thuật định thời và thường áp dụng chế độ trưng dụng.
+--- QUIZ ---
+Câu hỏi: Chọn các phát biểu ĐÚNG khi nói về các chế độ quyết định?
+A. Chế độ không trưng dụng thường sẽ yêu cầu ít chuyển ngữ cảnh hơn chế độ trưng dụng.
+B. Việc áp dụng chế độ trưng dụng sẽ đòi hỏi chi phí tính toán cao hơn chế độ không trưng dụng
+C. Tiến trình có thể bị thu hồi CPU khi đang thực thi nếu áp dụng cơ chế không trưng dụng
+D. Nếu sử dụng cơ chế trưng dụng, tiến trình sẽ được đảm bảo được thực thi mà không bị thu lại CPU giữa chừng.
+- Các giải thuật định thời:
++ First-Come, First-Served (FCFS).
++ Shortest Job First (SJK)
++ Shortest Remaining Time First (SRTF)....
+--- QUIZ ---
+Câu 1: Nhận định sau Đúng hay Sai?
+Khi sử dụng ché độ không trưng dụng, nếu tiến trình không thực hiện I/O thời gian chờ cũng chính là thời gian đáp ứng.
+A. True 
+B. False
+Answer key: Chính xác! Do trong chế độ không trưng dụng, tiến trình chỉ phải thực hiện chờ đợi khi chưa được nhận CPU để thực thi. Một khi đã được nhận CPU, tiến trình sẽ thực thi đế khi kết thúc mà không phải chờ đợi thêm lần nào nữa (không tính trường hợp xử lý I/O))
+2. Giải thuật First-come, First-Served (FCFS):
+- Hàm lựa chọn:
++ Tiến trình nào yêu cầu CPU trước sẽ được cấp phát CPU trước.
++ Tiến trình sẽ thực thi đến khi kết thúc hoặc bị block do I/O.
+- Chế độ quyết định: không trưng dụng (non-preemptive).
+- Hiện thực: sử dụng hàng đợi FIFO (FIFO queues):
++ Tiến trình mới xuất hiện được thêm vào cuối hàng đợi
+- Đối với giải thuật First-Comes-First-Served, độ ưu tiên được sử dụng để lựa chọn tiến trình nhận CPU chính là Arrival Time. Trong đó, giá trị của đại lượng càng lớn thì sẽ càng được xếp về phía cuối hàng đợi và ngược lại.
+- Thời gian đáp ứng (Response TIme) = Start - Arrival Time/ Tổng tiến trình
+- Thời gian hoàn thành (Turnaround Time) = Finish - Arrival Time/ Tổng tiến trình
+- Thời gian chờ (Waiting Time) = Turnaround - Burst Time 
+- Đối với giải thuật không trưng dụng, thời gian chờ bằng thời gian đáp ứng.
+3. Shortest-Job-First (SJF):
+- Hàm chọn lựa: tiến trình có thời gian yêu cầu thực thi (CPU burst) ngắn nhất sẽ được chọn.
++ Khi CPU trống, OS sẽ chọn tiến trình có CPU Burst ngắn nhất để được thực thi tiếp theo.
++ Giải thuật này sử dụng chiều dài thời gian thực thi của tiến trình làm căn cứ để chọn lựa.
+- SJF có thể được hiện thực với cả 2 chế độ quyết định: trưng dụng và không trưng dụng.
+- SJK ở chế độ không trưng dụng:
++ Hàm chọn lựa được thực thi khi CPU trống.
++ Khi tiến trình được cấp CPU thì sẽ được thực thi cho đến khi kết thúc.
++ Khi một tiến trình kết thúc, một tiến trình đã sẵn sàng khác có thời gian thực thi ngắn nhất sẽ được chọn.
+- SJK ở chế độ trưng dụng: 
++ Hàm chọn lựa được thực thi khi có tiến trình mới xuất hiện hoặc có tiến trình kết thúc.
++ Khi có tiến trình mới xuất hiện với CPU-burst nhỏ hơn thời gian yêu cầu còn lại (remaining time) của tiến trình đang thực thi, tiến trình mới sẽ được chọn và tiến trình đang thực thi sẽ bị dừng lại.
++ Khi một tiến trình kết thúc, một tiến trình khác có CPU-Burst (hoặc thời gian yêu cầu còn lại) nhỏ nhất sẽ được chọn tiếp theo.
++ SJK ở chế độ trưng dụng còn được gọi là Shortest-Remaining-Time-First (SRTF).
++ SRTF là tối ưu về thời gian đợi: có thời gian chờ đợi trung bình ngắn nhất với mội tập tiến trình cho trước.
