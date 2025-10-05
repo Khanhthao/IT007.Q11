@@ -392,3 +392,33 @@ Answer key: D. Các tiểu trình có thể chia sẻ dữ liệu trong các tha
 - Nhiều - Nhiều (Many-to-Many)
 - Mô hình Nhiều - Một (Many-to-One)
 + Nhiều tiến trình người dùng được ánh xạ đến một tiểu trình hạt nhân.
++ Một tiểu trình bị block sẽ dẫn đến tất cả tiểu trình bị block.
++ Các tiểu trình không thể chạy song song trên các hệ thống đa lõi bởi vì chỉ có một tiểu trình có thể truy xuất nhân tại một thời điểm.
++ Rất ít hệ thống sử dụng mô hình này.
+- Mô hình Một - Một (One - to - One)
++ Mỗi tiểu trình người dùng ứng với một tiểu trình hạt nhân.
++ Tạo một tiểu trình người dùng cũng đồng thời tạo một tiểu trình hạt nhân.
++ Tính đồng thời (concurrency) tốt hơn mô hình nhiều - một vì các tiểu trình khác vẫn hoạt động bình thường khi một tiểu trình bị block.
++ Nhược điểm: Số lượng tiểu trình của mỗi tiến trình có thể bị hạn chế.
++ Nhiều hệ điều hành sử dụng: Windows, Linux.
+- Mô hình Nhiều - Nhiều (Many - to - Many):
++ Các tiểu trình người dùng được ánh xạ với nhiều tiểu trình hạt nhân.
++ Cho phép hệ điều hành tạo đủ số lượng tiểu trình hạt nhân --> Giải quyết được hạn chế của 2 mô hình trên.
+--- QUIZ ---
+Câu 1: Mô hình đa tiểu trình nào sau đây đang được áp dụng nhiều nhất hiện nay?
+A. Many-to-Many
+B. Many-to-One
+C. One-to-One
+Answer key: C. One-to-One
+Câu 2: NHỮNG ý nào sau đây là đúng khi nói về mô hình đa tiểu trình One-to-One:
+A. Khi một tiểu trình bị block, các tiểu trình còn lại vẫn có thể được thực thi.
+B. Chỉ có một tiểu trình được chọn để thực thi tại một thời điểm.
+C. Mô hình khó triển khai
+D. Mỗi tiểu trình người dùng tương ứng với một tiểu trình hạt nhân.
+Answer key: A, D.
+Câu 3: NHỮNG ý nào sau đây là nhược điểm của mô hình đa tiểu trình Many-to-One?
+A. Khi một tiểu trình bị block, cả tiến trình sẽ bị block.
+B. Phức tạp, khó triển khai
+C. Các tiểu trình không thể chạy song song trên các hệ thống đa lõi (multicore).
+D. Số lượng tiểu trình của mỗi tiến trình có thể bị hạn chế.
+Answer key: C, A.
