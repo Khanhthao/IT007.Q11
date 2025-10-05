@@ -184,3 +184,31 @@ Answer key: Chính xác! Do trong chế độ không trưng dụng, tiến trìn
 + Khi một tiến trình kết thúc, một tiến trình khác có CPU-Burst (hoặc thời gian yêu cầu còn lại) nhỏ nhất sẽ được chọn tiếp theo.
 + SJK ở chế độ trưng dụng còn được gọi là Shortest-Remaining-Time-First (SRTF).
 + SRTF là tối ưu về thời gian đợi: có thời gian chờ đợi trung bình ngắn nhất với mội tập tiến trình cho trước.
+- Nhận xét về giải thuật SJF: 
++ Có thể xảy ra tình trạng "đói" tài nguyên đối với các tiến trình có CPU-burst lớn nếu có nhiều tiến trình CPU-burst nhỏ (liên tục) xuất hiên trong hệ thống.
++ Cơ chế không trưng dụng không phù hợp cho hệ thống time sharing (interactive).
++ Giải thuật SJF ngầm định rằng độ ưu tiên được xác định dựa theo độ dài CPU-burst.
+-> Các tiến trình hướng CPU (CPU-Bound) có độ ưu tiên thấp hơn so với tiến trình hướng I/O (I/O-bound).
+-> Tuy nhiên,khi một tiến trình hướng CPU được thực thi thì nó độc chiếm CPU cho đến khi kết thúc.
+- Ưu điểm: SJF tối ưu trong việc giảm thời gian đợi trung bình.
+- Hạn chế: Cần phải ước lượng thời gian cần CPU tiếp theo của tiến trình.
+- Thời gian sử dụng CPU chính là độ dài của CPU Burst:
++ Trung bình tất cả các CPU Burst đo được trong quá khứ.
++ Nhưng thông thường những CPU Burst càng mới càng phản ánh đúng hành vi của tiến trình trong tương lai.
+- Một kỹ thuật thường dùng là sử dụng trung bình hàm mũ.
+4. Giải thuật Priority Scheduling:
+- Mỗi tiến trình sẽ được gán một độ ưu tiên (thường biểu diễn bởi một con số).
+- CPU sẽ được cấp cho tiến trình có độ ưu tiên cao nhất theo các giá trị số được gán (có thể theo thứ tự tăng dần hay giảm dần).
+- Định thời sử dụng độ ưu tiên có thể: Preemptive, Non-preemptive.
+- Cách gán độ ưu tiên cho tiến trình:
++ SJF là một giải thuật định thời sử dụng độ ưu tiên được xác định dựa vào thời gian sử dụng CPU (giá trị được ước lượng).
++ Ngoài ra, việc gán độ ưu tiên còn có thể dựa vào:
+. Yêu cầu về bộ nhớ.
+. Số lượng file được mở.
+. Tỉ lệ thời gian dùng cho I/O trên thời gian sử dụng CPU. 
+. Các yêu cầu bên ngoài ví dụ như: số tiền người dùng trả khi thực thi công việc.
+- Hạn chế:
++ Vấn đề trì hoãn vô hạn định: tiến trình có độ ưu tiên thấp có thể không bao giờ được thực thi (do có những tiến trình độ ưu tiên cao hơn liên tục xuất hiện).
+- Giải pháp: làm mới (aging) - độ ưu tiên của tiến trình sẽ tăng theo thời gian.
+5. Giải thuật Round Robin:
+- Mỗi tiến trình nhận được một đơn vị thời gian CPU 
