@@ -211,4 +211,109 @@ Answer key: Chính xác! Do trong chế độ không trưng dụng, tiến trìn
 + Vấn đề trì hoãn vô hạn định: tiến trình có độ ưu tiên thấp có thể không bao giờ được thực thi (do có những tiến trình độ ưu tiên cao hơn liên tục xuất hiện).
 - Giải pháp: làm mới (aging) - độ ưu tiên của tiến trình sẽ tăng theo thời gian.
 5. Giải thuật Round Robin:
-- Mỗi tiến trình nhận được một đơn vị thời gian CPU 
+- Mỗi tiến trình nhận được một đơn vị thời gian CPU (time slice, quantum time) để thực thi. Thông thường khoảng thời gian này nhỏ, từ 10-100 ms.
+- Sau khoảng thời gian đó, tiến trình bị đoạt quyền và trở về cuối ready queue.
+- Gọi n là số lượng tiến trình trong ready queue và q là khoảng thời gian đơn vụ mà CPU được cấp phát cho tiến trình (quantum time), khi đó, không có tiến trình nào phải chờ đợi quá (n-1)q đơn vị thời gian.
+Ví dụ: n = 10 tiến trình, q = 5 ms => 45ms trc nó là 9 tiến trình khác, ko có nào chờ quá 45ms.
+- Nhận xét về giải thuật Round Robin:
++ Nếu q lớn: RR trở thành FCFS.
++ Nếu q nhỏ: phải tốn chi phí chuyển ngữ cảnh giữa các tiến trình -> q không nên quá nhỏ
++ Ưu tiên tiến trình hướng CPU.
++ RR sử dụng một giả thuyết ngầm là tất cả các tiến trình đều có tầm quan trọng ngang nhau.
++ Ưu điểm: Thời gian đáp ứng nhỏ
++ Hạn chế: Thời gian chờ đợi trung bình và thời gian hoàn thành trung bình của giải thuật RR thường khá lớn.
+- Quantum time và hiệu suất hệ thống:
++ Khi thực hiện chuyển ngữ cảnh, kernel thread sẽ sử dụng CPU, không phải user thread.
++ Phí tổn hệ thống (OS Overhead): thời gian sử dụng CPU sẽ để thực hiện chuyển ngữ cảnh.
+- Hiệu suất hệ thống: tùy thuộc vào kích thước quanntum time
++ Nếu quantum time ngắn: thời gian đáp ứng nhanh, nhưng phí tổn hệ thống lớn do số lần chuyển ngữ cảnh tăng.
++ Nếu quantum time dài: hiệu quả sử dụng CPU tốt hơn, nhưng thời gian đáp ứng cũng lớn.
++ Nếu quantum time quá lớn: RR trở thành FCFS.
+--- QUIZ ---
+Câu hỏi: Những nhận xét nào sau đây là SAI khi nói về giải thuật Round Robin?
+A. Nếu Quantum quá lớn, giải thuật Round Robin sẽ trở thành giải thuật FCFS,
+B. Quantum time phải luôn lớn hơn hoặc bằng thời gian chuyển ngữ cảnh
+C. Nếu Quantum time quá nhỏ, phí tổn hệ thống sẽ lớn.
+D. Khi tăng Quantum time, thời gian hoàn thành trung bình của các tiến trình sẽ được cải thiện.
+Answer key: B, D.
+6. Giải thuật Highest-Response-Ratio-Next:
+- Chọn tiến trình kế tiếp có giá trị RR (Response ratio) lớn nhất:
+RR = time spent waiting + expected service time / expected service time = waiting + burst + 1
+- Các tiến trình ngắn được ưu tiên hơn vì có service time nhỏ.
+--- QUIZ ---
+Câu 1: Tại sao các tiến trình ngắn lại được ưu tiên trong giải thuật HRN:
+A. Vì thời gian thực thi nhỏ làm tăng chỉ số "response ratio"
+B. Vì thời gian chờ đợi lớn làm tăng chỉ số "response ratio"
+C. Vì các tiến trình ngắn hoàn thành nhanh chóng hơn
+Answer key: A. Vì thời gian thực thi nhỏ làm tăng chỉ số "response ratio"
+Câu 2: Giải thuật HRRN và cơ chế "aging" có điểm gì giống nhau?
+A. Cả 2 đều tập trung vào giảm thời gian chờ đợi của tiến trình dài
+B. Cả 2 đều giảm độ ưu tiên của tiến trình theo thời gian
+C. Cả 2 đều tăng độ ưu tiên của tiến trình theo thười gian để tránh tình trạng đói.
+Answer key: C. Cả 2 đều tăng độ ưu tiên của tiến trình theo thười gian để tránh tình trạng đói.
+Câu 3: Trong giải thuật HRRN, chỉ số "response ratio" (RR) được tính ntn?
+A. Bằng tổng thời gian chờ đợi chia cho thời gian thực thi ước tính.
+B. Bằng tổng thời gian chờ đợi cộng với thời gian thực thi ước tính, chia cho thời gian thực ước tính
+C. Bằng thời gian thực thi ước tính chia cho thời gian chờ đợi.
+Answer key: B. Bằng tổng thời gian chờ đợi cộng với thời gian thực thi ước tính, chia cho thời gian thực ước tính
+7. Giải thuật Multilevel Queue:
+- Ready queue được chia thành nhiều hàng đợi riêng biệt theo một số tiêu chuẩn sau:
++ Đặc điểm và yêu cầu định thời của tiến trình
++ Phân loại tiến trình: Foreground (interactive) và background,...
+- Tiến trình được gán cố định vào một hàng đợi, mỗi hàng đợi sử dụng giải thuật định thời riêng.
+- Việc định thời giữa các hàng đợi:
++ Hệ điều hành cần phải định thời cho các hàng đợi:
+. Fixed priority scheduling: phục vụ từ hàng đợi có độ ưu tiên cao đến thấp -> có thể phát sinh vấn đề đói tài nguyên.
+. Time slice: mỗi hàng đợi được nhận một khoảng thời gian chiếm CPU và phân phối cho các tiến trình trong hàng đợi khoảng thời gian đó.
+Ví dụ: 80% cho hàng đợi foreground định thời bằng RR và 20% cho hàng đợi background định thời bằng giải thuật FCFS.
+- Hạn chế của MUltilevel Queue:
+- Tiến trình không thể chuyển từ hàng đợi này sang hàng đợi khác:
+-> Có thể làm giảm hiệu suất hệ thống trong trường hợp một hàng đợi có nhiều tiến trình trong khi các hàng đợi khác lại trống.
+-> Khắc phục bằng cơ chế feedback: cho phép tiến trình di chuyển một cách thích hợp giữa các hàng đợi khác nhau.
+8. Giải thuật Multilevel Feedback Queue:
+- Phân loại tiến trình dựa trên các đặc tính về CPU-burst.
+- Sử dụng chế độ trưng dụng (preemptive).
+- Sau một khoảng thời gian nào đó, các tiến trình hướng I/O và tiến trình interactive sẽ ở các hàng đợi có độ ưu tiên cao hơn còn các tiến trình hướng CPU sẽ ở các hàng đợi có độ ưu tiên thấp hơn.
+- Một tiến trình đã chờ quá lâu ở một hàng đợi có độ ưu tiên thấp có thể được chuyển đến hàng đợi có độ ưu tiên cao hơn (cơ chế aging).
+- Các vấn đề:
++ Số lượng hàng đợi bao nhiêu là thích hợp?
++ Dùng giải thuật định thời nào ở mỗi hàng đợi?
++ Làm sao để xác định thời điểm cần chuyển một tiến trình đến hàng đợi cao hơn hoặc thấp hơn?
++ Khi tiến trình yêu cầu được xử lý thì đưa vào hàng đợi nào là hợp lý nhất?
+--- QUIZ ---
+Câu 1: Trong giải thuật Multilevel Feedback Queue, điều gì xảy ra nếu một tiến trình chờ đợi quá lâu ở hàng đợi có độ ưu tiên thấp?
+A. Tiến trình sẽ bị hủy bỏ.
+B. Tiến trình sẽ được chuyển lên hàng đợi có độ ưu tiên cao hơn.
+C. Tiến trình sẽ được giữ nguyên ở hàng đợi đó.
+Answer key: B. Tiến trình sẽ được chuyển lên hàng đợi có độ ưu tiên cao hơn.
+Câu 2: Trong giải thuật Multilevel Queue, các tiến trình được chia thành các hàng đợi khác nhau dựa trên tiêu chí nào?
+A. Độ dài của tiến trình
+B. Độ phức tạp của thuật toán
+C. Đặc điểm và yêu cầu định thời của tiến trình.
+Answer key: C. Đặc điểm và yêu cầu định thời của tiến trình.
+Câu 3: Điều gì xảy ra nếu hàng đợi có độ ưu tiên thấp hơn không được cấp phát đủ thời gian CPU trong giải thuật Multilevel Queue?
+A. Tiến trình sẽ bị dừng lại
+B. Các tiến trình trong hàng đợi đó có thể gặp vấn đề starvations (đói tài nguyên)
+C. Hệ thống sẽ tự động tăng độ ưu tiên cho hàng đợi đó.
+Answer key: B. Các tiến trình trong hàng đợi đó có thể gặp vấn đề starvations (đói tài nguyên)
+Câu 4: Giải thuật Multilevel Feedback Queue khác gì so với Multilevel Queue?
+A. Multilevel Feedback Queue sử dụng duy nhất một loại giải thuật định thời.
+B. Multilevel Feedback Queue không có sự khác biệt so với Multilevel Queue.
+C. Multilevel Feedback Queue cho phép tiến trình chuyển giữa các hàng đợi khác nhau.
+Answer key: C. Multilevel Feedback Queue cho phép tiến trình chuyển giữa các hàng đợi khác nhau.
+Câu 5: Thách thức chính khi triển khai giải thuật Multilevel Feedback Queue là gì?
+A. Xác định số lượng hàng đợi và giải thuật định thời cho mỗi hàng đợi. (*)
+B. Đảm bảo tất cả các tiến trình đều sử dụng cùng một hàng đợi.
+C. Tránh sử dụng giải thuật định thời khác nhau cho các hàng đợi.
+Answer key: A. Xác định số lượng hàng đợi và giải thuật định thời cho mỗi hàng đợi. (*)
+Câu 6: Hạn chế lớn nhất của giải thuật Multilevel Queue là gì?
+A. Các tiến trình không thể chia sẻ tài nguyên
+B. Các tiến trình không thể tương tác với nhau
+C. Các tiến trình không thể chuyể từ hàng đợi này sang hàng đợi khác.
+Answer key: C. Các tiến trình không thể chuyể từ hàng đợi này sang hàng đợi khác.
+9. So sánh các giải thuật:
+- Các yếu tố quyết định giải thuật nào tốt nhất:
++ Tần suất tải việc (System workload).
++ Sự hỗ trợ của phần cứng đối với dispatcher.
++ Sự tương quan về trọng số của các tiêu chuẩn định thời như response time, hiệu suất CPU, throughput,...
++ Phương pháp định lượng so sánh.
