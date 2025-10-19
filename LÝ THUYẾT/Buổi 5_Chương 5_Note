@@ -1,1 +1,19 @@
-
+CHƯƠNG 5: ĐỒNG BỘ TIẾN TRÌNH
+I. Race Condition:
+1. Bài toán Producer với Consumer:
+- Gồm 02 tiến trình diễn ra đồng thời với nhau:
++ Producer: liên tục tạo ra hàng hóa -> tăng biến count.
++ Consumer: liên tục bán hàng -> giảm biến count.
+---QUIZ---
+Câu hỏi: Chọn phát biểu đúng khi nói về thực thi song song và thực thi đồng thời:
+A. Ta có 2 tiến trình PA và PB thực thi đồng thời với nhau, nếu CPU core thực thi PA thì PB sẽ vào trạng thái Terminated.
+B. Hai hay nhiều tác vụ có thể được thực thi đồng thời chỉ với một core CPU.
+C. Nếu hai tác vụ được thực thi đồng thời với nhau thì hệ thống cần có ít hai core CPU.
+D. Trong hệ thống có nhiều core CPU, một core CPU chỉ cần phải thực thi một tác vụ
+Answer key: B. Hai hay nhiều tác vụ có thể được thực thi đồng thời chỉ với một core CPU.
+Chính xác! Khi thực thi đồng thời CPU sẽ được định thời để xử lý các tiến trình khác nhau trong một khoảng thời gian nhất định.
+- Thông thường các tiến trình đều sẽ được đặt trong vòng while để thực thi liên tục.
+- Khi các tiến trình thực thi đồng thời, ta sẽ KHÔNG biết được các dữ kiện sau:
++ Tiến trình nào thực thi trước?
++ Tiến trình nào thực thi lâu hơn (do giải thuật định thời CPU)?
++ Tiến trình sẽ hết quantum 
