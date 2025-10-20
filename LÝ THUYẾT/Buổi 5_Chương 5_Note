@@ -17,4 +17,126 @@ Chính xác! Khi thực thi đồng thời CPU sẽ được định thời đ�
 + Tiến trình nào thực thi trước?
 + Tiến trình nào thực thi lâu hơn (do giải thuật định thời CPU)?
 + Tiến trình sẽ hết quantum time khi nào?
-
+--- QUIZ ---
+Câu 1: Điền vào chỗ trống:
+Trong bài toán Producer vs Consumer, biến ... được chia sẻ chung giữa 2 tiến trình và được gọi là dữ liệu được chia sẻ - shared data.
+Câu 2: Trong chương trình Prod vs Cons.c, khi chạy chương trình vấn đề gì đã phát sinh?
+A. Mảng buffer[in] bị ghi sai vị trí.
+B. Tiến trình Producer và Consumer không thực thi xen kẽ nhau làm biến count bị tăng liên tục hoặc giảm liên tục
+C. Các giá trị count của tiến trình Producer và Consumer không tăng/giảm theo logic.
+D. Tất cả đều đúng.
+Answer key: C. Các giá trị count của tiến trình Producer và Consumer không tăng/giảm theo logic.
+Câu 3: Trong bài toán Producer vs Consumer, chúng ta sử dụng bounded buffer để lưu các giá trị, đặc điểm của bounded buffer là gì?
+A. Các chỉ số được tạo ra ngẫu nhiên
+B. Khi mảng đầy, phần tử tiếp theo sẽ được ghi lại vào đầu mảng.
+C. Khi ghi giá trị liên tục vào bounded buffer, mảng sẽ bị tràn.
+D. Tất cả đều đúng.
+Answer key: B. Khi mảng đầy, phần tử tiếp theo sẽ được ghi lại vào đầu mảng.
+--- QUIZ ---
+Câu hỏi: Giả sử giá trị ban đầu count = 5, mỗi thao tác load, gán, store tốn 1 chu kỳ lệnh. Nếu quantum time = 03 chu kỳ lệnh, biết tiến trình Producer (count++) được thực thi trước Consumer (count--), hấy sắp xếp sự thực thi của các thao tác?
+Answer key:
+CHU KỲ I: reg1 = count
+CHU KỲ II: reg1 = reg1 + 1
+CHU KỲ III: count = reg1
+CHU KỲ IV: reg2 = count
+CHU KỲ V: reg2 = reg2 - 1
+CHU KỲ VI: count = reg2
+Câu hỏi: Câu hỏi: Giả sử giá trị ban đầu count = 5, mỗi thao tác load, gán, store tốn 1 chu kỳ lệnh. Nếu quantum time = 02 chu kỳ lệnh, biết tiến trình Producer (count++) được thực thi trước Consumer (count--), hấy sắp xếp sự thực thi của các thao tác?
+CHU KỲ I: reg1 = count
+CHU KỲ II: reg1 = reg1 + 1
+CHU KỲ III: reg2 = count
+CHU KỲ IV: reg2 = reg2 - 1
+CHU KỲ V: count = reg1
+CHU KỲ VI: count = reg2
+--- QUIZ ---
+Câu 1: Thuật ngữ nào sau đây được sử dụng để chỉ ván đề xảy ra bởi việc không đồng bộ tiến trình?
+A. Process confliction
+B. Data inconsistency
+C. Data consistency
+D. Data missing
+Answer key: B. Data inconsistency
+Câu 2: Nhận định sau đúng (True) hay sai (False)?
+Giá trị cuối cùng của biến count không phụ thuộc vào việc tiến trình nào thực thi trước.
+Answer key: False.
+Câu 3: CÁC yếu tố nào sau đây gây ra giá trị biến count của bài toán Producer - Consumer trở nên không nhất quán?
+A. Consumer thực hiện các lệnh sau Producer.
+B. Biến count được chía sẻ cho 02 tiến trình
+C. Các lệnh thao tác lên biến count là đơn nguyên
+D. Mã mãy của các lệnh thao tác lên biến count bị thực thi xen kẽ.
+Answer key: B, D.
+2. Bài toán Cấp phát PID:
+- 02 tiến trình P0 và P1 đang tạo tiến trình con bằng cách gọi hàm fork().
+- Biến next_available_pid được kernel sử dụng để tạo ra PID cho tiến trình mới.
+- Tiến trình con của P0 và P1 đồng thời yêu cầu PID và nhận được kết quả như nhau.
+- Cần có cơ chế để ngăn P0 và P1 truy cập biến next_available_pid cùng lúc, để tránh tình trạng một PID được cấp phát cho cả 2 tiến trình.
+3. Race condition:
+- Race condition là hiện tượng xảy ra khi các tiến trình cùng truy cập đồng thời vào dữ liệu được chia sẻ. Kết quả cuối cùng sẽ phụ thuộc vào thứ tự thực thi của các tiến trình đang chạy đồng thời với nhau.
+- Trong bài toán Producer vs Consumer dữ liệu được chia sẻ là biến count bị tác động đồng thời bởi cả 2 tiến trình Producer và Consumer. Trong bài toán cấp phát PID, dữ liệu được chia sẻ là biến next_available_pid bị tranh giành bởi tiến trình thực thi đồng thời là P0 và P1.
+- Race condition có thể dẫn đến việc dữ liệu bị sai và không nhất quán (inconsistency).
+- Để dữ liệu chia sẻ được nhất quán, cần đảm bảo sao cho tại mỗi thời điểm chỉ có 1 tiến trình được thao tác lên dữ liệu chía sẻ. Do đó cần có cơ chế dồng bộ hoạt động của các tiến trình này.
+--- QUIZ ---
+Câu 1: Chọn phát biểu đúng khi nói về race condition: 
+A. Race condition là hiện tượng xảy ra khi các tiến trình không thể truy cập vào dữ liệu được chia sẻ cùng một lúc.
+B. Race condition là hiện tượng xảy ra khi các tiến trình chỉ truy cập vào dữ liệu được chia sẻ một cách tuần tự.
+C. Race condition là hiện tượng xảy ra khi dữ liệu chia sẻ không thay đổi dưới tác động của các tiến trình.
+D. Race condition là hiện tượng xảy ra khi các tiến trình cùng truy cập đồng thời vào dữ liệu được chia sẻ, kết quả cuối cùng phụ thuộc vào thứ tự thực thi của các tiến trình.
+Answer key: D. Race condition là hiện tượng xảy ra khi các tiến trình cùng truy cập đồng thời vào dữ liệu được chia sẻ, kết quả cuối cùng phụ thuộc vào thứ tự thực thi của các tiến trình.
+Câu 2: Race condition có thể dẫn đến:
+A. Dữ liệu được cập nhật chính xác và nhất quán
+B. Dữ liệu bị sai và không nhất quán
+C. Các tiến trình không thể hoạt động đồng thời
+D. Dữ liệu được chia sẻ không bị ảnh hưởng bởi race condition
+Answer key: B. Dữ liệu bị sai và không nhất quán
+II. Vấn đề vùng tranh chấp: 
+- Xem xét hệ thông có n tiến trình {P0, P1,....Pn-1)
+- Mỗi tiến trình có một vùng tranh chấp là một đoạn code:
++ Thực hiện việc thay đổi giá trị của dữ liệu được chia sẻ, cập nhật bảng, ghi file,...
++ Khi một tiến trình đang thực hiện vùng tranh chấp của mình thì các tiến trình khác KHÔNG được thực hiện vùng tranh cháp của chúng.
+- Vấn đề vùng tranh chấp chính là thiết kế cách thức xử lý các vấn đề trên.
+- Mỗi tiến trình phải yêu cầu để được phép tiến vào vùng tranh chấp của mình thông qua entry section, sau đó thực thi vùng tranh chấp - critical section, rối tiến đến exit section, và sau cùng là remainder section.
+Đoạn code: 
+while (1){
+  entry section
+    critical section
+  exit section
+    remainder section
+}
+3. Yêu cầu dành cho lời giải bài toán giải quyết tranh chấp:
+- Lời giải cho bài toán vùng tranh chấp phải đảm bảo 3 yêu cầu sau:
++ (1) Mutual exclusion (loại trừ tương hỗ): Khi một process P đang thực thi trong vùng tranh chấp (CS) của nó thì không có process Q nào khác đang thực thi trong CS của Q.
++ (2) Progress (tính tiến triển): Một tiến trình tạm dừng bên ngoài vùng tranh chấp không được ngăn cản các tiến trình khác vào vùng tranh chấp.
++ (3) Bounded waiting (chờ đợi giới hạn): Mỗi process chỉ phải chờ để được vào vùng tranh chấp trong một khoảng thời gian có hạn định nào đó. Không xảy ra tình trạng đói tài nguyên (starvation).
+--- QUIZ ---
+Câu 1: Mutual exclusion (loại trừ tương hỗ) trong bài toán vùng tranh chấp đảm bảo điều gì?
+A. Tiến trình chỉ được phép vào vùng tranh chấp sau khi đã thực thi trong vùng khác.
+B. Mỗi tiến trình chỉ được phép thực thi trong vùng tranh chấp của nó.
+C. Không có tiến trình nào được ngăn cản vào vùng tranh chấp
+D. Không có tiến trình nào cũng được thực thi trong vùng tranh chấp.
+Answer key: D. Không có tiến trình nào cũng được thực thi trong vùng tranh chấp.
+Câu 2: Progress (tính tiến triển) trong bài toán vùng tranh chấp đảm bảo điều gì?
+A. Tiến trình không bị ngăn cản vào vùng tranh chấp.
+B. Tiến trình không bị chặn trong vùng tranh chấp khi không có tiến trình khác thực thi vùng tranh chấp.
+C. Mỗi tiến trình phải chờ đợi trong vùng tranh chấp.
+D. Tiến trình chỉ được thực thi trong vùng tranh chấp.
+Answer key: B. Tiến trình không bị chặn trong vùng tranh chấp khi không có tiến trình khác thực thi vùng tranh chấp.
+Câu 3: Bounded waiting (chờ đợi giới hạn) trong bài toán vùng tranh chấp đảm bảo điều gì?
+A. Tiến trình chỉ được phép vào vùng tranh chấp sau khi đã thực thi trong vùng khác trong một khoảng thời gian xác định.
+B. Tiến trình không bị ngăn cản vào vùng tranh chấp.
+C. Mỗi tiến trình chỉ phải chờ đợi trong một khoảng thời gian xác định để vào vùng tranh chấp.
+D. Mỗi tiến trình phải chờ đợi vô thời hạn để vào vùng tranh chấp.
+Answer key: C. Mỗi tiến trình chỉ phải chờ đợi trong một khoảng thời gian xác định để vào vùng tranh chấp.
+Câu 4: Chọn CÁC phát biểu đúng khi nói về starvation và deadlock?
+A. Deadlock thường xảy ra khi hai hay nhiều tiến trình chờ đợi lẫn nhau các điều kiện nào đó
+B. Deadlock và starvation đều làm cho tiến trình bị chờ vô hạn định
+C. Starvation xảy ra khi tiến trình bị ngăn cản nhận tài nguyên, từ đó dẫn đến việc tiến trình không thể thực thi
+D. Deadlock và starvation đều bị gây ra bởi hiện tượng tiến trình có độ ưu tiên thấp bị các tiến trình có độ ưu tiên cao trưng dụng tài nguyên
+Answer key: A, B, C
+IV. Các giải pháp dựa trên ngắt (giải pháp phần mềm):
+1. Giải pháp phần mềm 1:
+- Giải pháp dành cho 2 tiến trình
+- Giả sử 2 lệnh hợp ngữ load và store là 2 thao tác đơn nguyên (không thể bị cắt ngang).
+- 2 tiến trình cũng chia sẻ một biến turn: int turn;
+- Biến turn có tác dụng chỉ ra tiến trình nào tới lượt để vào vùng tranh chấp.
+- Giá trị của turn sẽ được khởi tạo là i.
+- Mutal exclusion được đảm bảo:
+Pi chỉ được phép vào vùng tranh chấp khi: turn = i và turn không thể vừa bằng i vừa bằng j được (nếu i = 0 và j = 1 thì turn không thể vừa bằng 0, vừa bằng 1)
