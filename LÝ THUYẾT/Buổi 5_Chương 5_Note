@@ -16,4 +16,5 @@ Chính xác! Khi thực thi đồng thời CPU sẽ được định thời đ�
 - Khi các tiến trình thực thi đồng thời, ta sẽ KHÔNG biết được các dữ kiện sau:
 + Tiến trình nào thực thi trước?
 + Tiến trình nào thực thi lâu hơn (do giải thuật định thời CPU)?
-+ Tiến trình sẽ hết quantum 
++ Tiến trình sẽ hết quantum time khi nào?
+
