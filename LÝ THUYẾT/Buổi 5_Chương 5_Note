@@ -140,3 +140,15 @@ IV. Các giải pháp dựa trên ngắt (giải pháp phần mềm):
 - Giá trị của turn sẽ được khởi tạo là i.
 - Mutal exclusion được đảm bảo:
 Pi chỉ được phép vào vùng tranh chấp khi: turn = i và turn không thể vừa bằng i vừa bằng j được (nếu i = 0 và j = 1 thì turn không thể vừa bằng 0, vừa bằng 1)
+- Kiểm tra Progress -> Không đảm bảo.
+- Kiểm tra Bounded Waiting -> Không đảm bảo.
+--- QUIZ ---
+Câu 1: Trong giải pháp phần mềm số 1, CÁC yêu cầu nào không được đáp ứng?
+A. Progress và Bounded waiting
+B. Mutual Exclusion và Bounded waiting
+C. Mutual Exclusion và Progress
+D. Mutual Exclusion, Bounded waiting, và Progress
+Answer key: A. Progress và Bounded waiting
+Câu 2: Điền vào chỗ trống:
+Để hiện thực giải pháp phần mềm số 1, các thao tác load và store phải là những thao tác ....
+Answer key: đơn nguyên.
