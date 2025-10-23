@@ -152,3 +152,12 @@ Answer key: A. Progress và Bounded waiting
 Câu 2: Điền vào chỗ trống:
 Để hiện thực giải pháp phần mềm số 1, các thao tác load và store phải là những thao tác ....
 Answer key: đơn nguyên.
+2. Giải pháp Peterson:
+- Giải pháp dành cho 2 tiến trình.
+- Giả sử 2 lệnh hợp ngữ load và store là 2 thao tác đơn nguyên (không thể bị cắt ngang).
+- 2 tiến trình cùng chia sẻ 2 biến:
+  int turn;
+  boolean flag[2];
+- Biến turn có tác dụng chỉ ra tiến trình nào tới lượt để vào vùng tranh chấp.
+- Mảng flag[] được dùng để xác định liệu tiến trình đã sẵn sàng để vào vùng tranh chấp chưa
+  flag[i] = true
