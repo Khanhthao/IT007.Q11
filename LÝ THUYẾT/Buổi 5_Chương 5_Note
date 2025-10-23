@@ -160,4 +160,119 @@ Answer key: đơn nguyên.
   boolean flag[2];
 - Biến turn có tác dụng chỉ ra tiến trình nào tới lượt để vào vùng tranh chấp.
 - Mảng flag[] được dùng để xác định liệu tiến trình đã sẵn sàng để vào vùng tranh chấp chưa
-  flag[i] = true
+  flag[i]= true; ám chỉ là Pi đã sẵn sàng để vào vùng tranh chấp.
+- Mutual exclusion được đảm bảo:
+Pi chỉ được phép vào vùng tranh chấp khi hoặc flag[j] = false hoặc turn = i và turn không thể vừa bằng i, vừa bằng j được (nếu i=0 và j=1 thì turn không thể vừa bằng 0, vừa bằng 1).
+- P0 và P1 cùng tiến vào vùng tranh chấp, có nghĩa 2 tiến trình đã phải thực hiện entry section trước đó.
+- Kiểm tra Progress -> Đảm bảo.
+- Kiểm tra Bounded Waiting -> Đảm bảo:
++ P1 phải chờ tối đa 1 lần P0 vào vùng tranh chấp.
++ CS thường rất nhỏ nên thời gian chờ đợi sẽ không dài.
+--- QUIZ ---
+Câu 1: Điền vào chỗ trống:
+Trong giải thuật Peterson, nếu muốn vào vùng tranh chấp, tiến trình P1 phải chờ tối đa là ... lần vào P0 vào CS.
+Answer key: 1
+Câu 2: Giải thuật Peterson thỏa mãn CÁC yêu cầu nào dành cho lời giải bài toán đồng bộ?
+A. Không yêu cầu nào cả
+B. Bounded Waiting
+C. Mutual Exclusion
+D, Progress.
+Answer key: B, C, D.
+Câu 3: Phát biểu nào sau đây là sai khi nói về giải thuật Peterson?
+A. Biến turn đóng vai trò kiểm tra lượt của tiến trình và cờ flag[] thể hiện sự sẵn sàng của tiến trình khi muốn tiến vào vùng tranh chấp.
+B. Giải thuật Peterson có thể áp dụng cho n tiến trình.
+C. Giải thuật Peterson có thể gây ra hiện tượng starvation.
+D. Giải thuật Peterson có thể gây ra hiện tượng deadlock.
+Answer key: B. Giải thuật Peterson có thể áp dụng cho n tiến trình.
+3. Giải thuật Peterson và kiến trúc hiện đại:
+- Để cải thiện hiệu suất, vi xử lý và/hoặc trình biên dịch sẽ sắp xếp lại các thao tác mà độc lập với nhau.
+- Việc hiểu vì sao giải pháp Peterson không hoạt động trên kiến trúc hiện đại sẽ giúp sinh viên hiểu rõ hơn về race condition.
+- Với các tiến trình đơn tiểu trình thì việc thực hiện các lệnh sẽ không có gì thay đổi.
+- Với các tiến trình đa tiểu trình, việc sắp xếp lại các thao tác có thể dẫn đến kết quả không nhất quán hoặc không dự đoán được.
+- Có hai tiến trình cùng chia sẻ dữ liệu:
+boolean flag = false;
+int x = 0;
+- Thread1 thực hiện:
+while (!flag);
+print x;
+- Thread2 thực hiện:
+x = 100;
+flag = true;
+- Tuy nhiên, bởi vì biến flag và biến x là độc lập với nhau nên các thao tác:
+flag = true;
+x = 100;
+có thể bị sắp xếp lại thứ tự thực hiện.
+- Trong trường hợp này, kết quả có thể được in ra là 0. 
+- Xét lại giải pháp Peterson:
++ Việc gán flag[] và turn bị sắp xếp lại thứ tự thực thi
++ P0 và P1 cùng vào CS. 
++ Để đảm bảo giải pháp Peterson hoạt động chính xác trên kiến trúc máy tính hiện đại, ta phải sử dụng Memory Barrier.
+--- QUIZ ---
+Câu 1: Cơ chế nào sau đây được đề xuất để có thể thực hiện giải pháp Peterson trên kiến trúc hiện đại?
+A. Signaling
+B. Memory Barrier
+C. Exception handling
+D. Interrupts.
+Answer key: B. Memory Barrier.
+Câu 2: Chọn phát biểu sai khi phát biểu về kiến trúc hiện đại?
+A. Vi xử lý/trình biên dịch sắp xếp lại tất cả thao tác trong mã nguồn để gia tăng hiệu suất xử lý
+B. Các tiến trình đơn tiểu trình không bị ảnh hưởng bởi viêc sắp xếp lại các thao tác
+C. Các kết quả không dự đoán được có thể xuất hiện trên các tiến trình đa tiểu trình
+D. Các thao tác độc lập với nhau có khả năng bị sắp xếp lại thứ tự thực hiện
+Answer key: A. Vi xử lý/trình biên dịch sắp xếp lại tất cả thao tác trong mã nguồn để gia tăng hiệu suất xử lý
+V. Memory Barrier:
+- Memory model trong hệ điều hành là mô hình hoạt động của bộ nhớ trong hệ thống, bao gồm cách thức quản lý và truy xuất đến các vùng nhớ được cấp phát cho các tiến trình và luồng trong hệ thống. Memory model định nghĩa các quy tắc và ràng buộc cho việc sử dụng bộ nhớ, đám bảo tính đúng đắn, an toàn và hiệu quả của các hoạt động trên bộ nhớ.
+- Hai mô hình bộ nhớ phổ biến bao gồm:
++ Mô hình bộ nhớ được sắp xếp mạnh (strongly ordered memory model); các thay đổi bộ nhớ trên một bộ xử lý sẽ được các bộ xử lý khác biết ngay lập tức.
++ Mô hình bộ nhớ được sắp xếp yếu (weakly ordered memory model): các thay đổi bộ nhớ trên một bộ xử lý CÓ THỂ sẽ KHÔNG được các bộ xử lý khác biết ngay lập tức.
+- Memory barrier: là một chỉ thị (instruction) mà bắt buộc mọi thay đổi trong bộ nhớ phải được truyền tải (hiện thị) đến tất cả bộ xử lý khác.
+- Chỉ thị Memory Barrier: 
++ Khi một chỉ thị được thực hiện, hệ thống sẽ đảm bảo là tất cả thao tác load (nạp dữ liệu) và store (ghi dữ liệu) đều đã được hoàn thành trước khi các thao tác load và store sau đó được thực hiện.
++ Do đó, kể cả khi các lệnh bị sắp xếp lại, memory barrier bảo đảm rằng các thao tác ghi dữ liệu đều đã được hoàn thành trong bộ nhớ và được truyền tải đến các bộ xử lý khác trước khi các thao tác nạp dữ liệu hoặc ghi dữ liệu được thực thi trong tương lai.
+--- QUIZ ---
+Câu 1: Mục đích chính của Memory Barrier là gì?
+A. Đảm bảo thứ tự thực thi các câu lệnh.
+B. Ngăn chặn truy cập không đồng bộ vào bộ nhớ.
+C. Loại bỏ các lỗi thời gian thực thi.
+D. Tăng hiệu suất thực thi của chương trình.
+Answer key: A. Đảm bảo thứ tự thực thi các câu lệnh.
+Câu 2: Memory Barrier được chia thành các loại nào?
+A. Atomic barrier và Non-atomic barrier
+B. Exclusive barrier và Inclusive barrier
+C. Static ordered memory model và Dynamic ordered memory model
+D. Strongly ordered memory model và Weakly ordered memory model
+Answer key: D. Strongly ordered memory model và Weakly ordered memory model
+Câu 3: Nhận định sau đúng (True) hay sai (False): Sử dụng memory barrier có thể là giảm hiệu suất của chương trình?
+A. Đúng
+B. Sai
+Answer key: A. Đúng
+VI. Mutex Locks:
+1. Định nghĩa Mutex Locks:
+- Nếu xem vùng tranh chấp là 1 căn phòng thì Mutex lock là ổ khóa để khóa phòng để làm việc.
+- Cung cấp 2 thao tác: gọi acquire lock để yêu cầu khóa r tiến vào vùng tranh chấp, gọi release lock để tiến ra ngoài.
+- Khi thực hiện thao tác acquire nma không available thì nó chờ, chờ thao tác đó thì ko còn wait nữa.
+- Thao tác gọi là acquire() hoặc release () phải được thực hiện đơn nguyên
+-> Có thể được hiện thực thông qua lệnh phần cứng đơn nguyên như compare_and_swap.
+- Nếu busy waiting thì vẫn lãng phí CPU.
+2. Mutex locks không busy waiting trong mutex locks
+- Ta tạm thời đặt tiến tình vào trạng thái ngủ khi khóa bị khóa, và sau đó đánh thức tiến trình dậy khi khóa được mở.
+- Hệ điều hành cần cung cấp 2 thao tác: 
++ Block: tạm dừng và đặt tiến trình gọi thao tác này vào trong hàng đợi - trạng thái ngủ.
++ Wakeup: xóa một tiến trình ra khỏi hàng dợi và đặt lại vào trong hàng đợi sẵn sàng - đánh thức. 
+- Tiến trình P muốn vào CS:
++ Nếu khóa Mutex đang mở: tiến trình khóa lại và tiến vào CS.
++ Nếu khóa mutex đang khóa: tiến trình P bị block và vào trạng thái ngủ.
+- Tiến trình P sau khi hoàn thành CS:
++ Mở khóa Mutex.
++ Đánh thức tiến trình Q (nếu có) đang ngủ trong hàng chờ.
+--- QUIZ ---
+Câu hỏi: Mutex lock đảm bảo loại trừ tương hỗ bằng cách nào?
+A. Các tiến trình phải vào trạng thái ngủ trước khi vào vùng tranh chấp, tiến trình nào thức dậy trước sẽ được tiến vào vùng tranh chấp trước
+B. Tiến trình bị block bởi mutex sẽ được đánh thức sau một quãng thời thời gian q, sau đó trưng dụng CPU của tiến trình đang thực thi vùng tranh chấp trước đó
+C. Đảm bảo khoá mutex chỉ có thể được khoá bởi một tiến trình tại mọi thời điểm, các tiến trình yêu cầu sau sẽ bị block
+Answer key: C. Đảm bảo khoá mutex chỉ có thể được khoá bởi một tiến trình tại mọi thời điểm, các tiến trình yêu cầu sau sẽ bị block
+3. Cách sử dụng Mutex locks: 
+- Lưu ý: 
++ Mutex lock thường sẽ được khai báo toàn cục và được khởi tạo trong hàm main.
++ Cần phải xác định đúng vùng tranh chấp trước khi thực hiện các thao tác trên khóa mutex (acquire và release):
+- Khai báo và khởi tạo mutex -> Tiến trình/Tiểu trình yêu cầu khóa Mutex - acquire() để thực hiện CS -> Tại một thời điểm chỉ có một tiến trình/ tiểu trình thành công khóa mutex và thực hiện CS -> Tiến trình mở khóa mutex - release () sau khi rời CS -> Hủy khóa Mutex.
