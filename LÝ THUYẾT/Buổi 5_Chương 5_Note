@@ -276,3 +276,148 @@ Answer key: C. Đảm bảo khoá mutex chỉ có thể được khoá bởi m�
 + Mutex lock thường sẽ được khai báo toàn cục và được khởi tạo trong hàm main.
 + Cần phải xác định đúng vùng tranh chấp trước khi thực hiện các thao tác trên khóa mutex (acquire và release):
 - Khai báo và khởi tạo mutex -> Tiến trình/Tiểu trình yêu cầu khóa Mutex - acquire() để thực hiện CS -> Tại một thời điểm chỉ có một tiến trình/ tiểu trình thành công khóa mutex và thực hiện CS -> Tiến trình mở khóa mutex - release () sau khi rời CS -> Hủy khóa Mutex.
+--- QUIZ ---
+1. Trong thư viện POSIX thread, để khai báo một mutex có tên spinlock thì ta dùng lệnh:
+.............................; //cần được khai báo toàn cục.
+Answer key: pthread_mutex_t spinlock;
+2. Mutex spinlock sẽ được khởi tạo giá trị trong hàm main với câu lệnh:
+.............................; //khởi tạo mutex spinlock với thuộc tính NULL
+Answer key:pthread_mutex_init(&spinlock, NULL);
+3. Để thực hiện yêu cầu được truy cập vào vùng tranh chấp, ta dùng lệnh:
+.............................; //yêu cầu khóa mutex spinlock
+Answer key: pthread_mutex_lock(&spinlock);
+4. Sau khi thực thi xong công việc trong vùng tranh chấp, ta mở khóa bằng cách thực thi câu lệnh:
+.............................; //mở khóa mutex spinlock.
+Answer key: pthread_mutex_unlock(&spinlock);
+VII. Semaphores:
+1. Định nghĩa:
+- Là một công cụ đồng bộ cung cấp các cách sử dụng linh hoạt hơn (hơn khóa Mutex) để các tiến trình có thể đồng bộ các hoạt động/hành vi của mình.
+- Semaphore S về bản chất là một biến số nguyên.
+- Chỉ có thể được truy cập thông qua 2 thao tác: 
++ wait() và signal() - hay còn được gọi là P() và V().
++ Định nghĩa thao tác wait():
+wait(S){
+  while (S <= 0);
+    //busy wait
+  S--;
+}
+. Nếu semaphore S không dương thì tiến trình/tiểu trình phải chờ.
+. Khi tiến trình được thực hiện CS thì trừ semaphore đi 1;
+. Được sử dụng khi muốn sử dụng tài nguyên (semaphore đại diện cho tài nguyên xử lý).
++ Định nghĩa thao tác signal():
+signal (S){
+  S++;
+}
+. Tăng giá trị của semaphore lên 1.
+. Được sử dụng khi trả lại tài nguyên.
+2. Phân loại semaphore:
+- Counting semaphore:
++ Giá trị là số nguyên không giới hạn.
+- Binary semaphore:
++ Giá trị là 0 hoặc là 1
++ Có tác dụng giống với khóa mutex.
+- Có thể sử dụng counting semaphore như một binary semaphore.
+--- QUIZ ---
+Câu 1: Về mặt bản chất, semaphore là gì?
+A. Biến số nguyên
+B. Biến nhị phân
+C. Biến số thực
+D. Hằng số
+Answer key: A. Biến số nguyên.
+Câu 2: Semaphore kiểm soát việc thực thi của tiến trình bằng cách nào?
+A. Tất cả đều đúng
+B. Nếu tiến trình sử dụng tài nguyên thì giảm semaphore đi một đơn vị
+C. Nếu tiến trình tạo ra/trả lại tài nguyên thì tăng semaphore lên một đơn vị
+D. Nếu semaphore không dương thì tiến trình phải chờ
+Answer key: A. Tất cả đều đúng.
+3. Hiện thực semaphores:
+- Cần phải đảm bảo rằng không có 2 tiến trình nào cùng lúc thực hiện thao tác wait() và signal() của một semaphore.
+- Việc hiện thực semaphore cũng là một bài toán vùng tranh chấp, hàm wain() và signal() cũng nằm trong vùng tranh chấp.
+- Có thể thực hiện busy waiting ở trong vùng tranh chấp:
++ Đoạn code thực hiện ngắn.
++ Busy waiting sẽ ngắn nếu CS hiếm khi được thực thi.
+- Tuy nhiên, một số chương trình có thể tốn nhiều thời gian trong CS -> đây không phải giải pháp tốt.
+- Hiện thức semaphore không busy waiting.
++ Một semaphore được gắn với một hàng đợi.
++ Mỗi phần tử trong hàng chờ có 2 thành phần:
+. Giá trị số nguyên (giá trị của semaphore).
+. Con trỏ chỉ đến phần tử tiếp theo (danh sách liên kết đơn).
++ Hệ điều hành cần cung cấp 2 thao tác:
+. block: tạm dừng và đặt tiến trình gọi thao tác này vào trong hàng đợi - trạng thái ngủ.
+. wakeup: xóa một tiến trình ra khỏi hàng đợi và đặt lại vào trong hàng đợi sẵn sàng - đánh thức.
+- waiting queue:
+typedef struct {
+  int value;
+  struct process *list;
+} semaphore; 
+- Thao tác wait()
+wait (semaphore *S){
+  S -> value--;
+  if (S-> value < 0){
+    add this process to S -> list;
+    block();
+  }
+}
+- Thao tác signal():
+signal(semaphore *S){
+  S->value++;
+  if (S->value <= 0){
+    remove a process P from S->listl
+    wakeup (P);
+  }
+}
+--- QUIZ ---
+Câu 1: Biết rằng khi tiến trình bị block thì nó sẽ vào trạng thái waiting, vậy sau khi tiến trình được wake up thì nó sẽ chuyển sang trạng thái nào?
+A. New
+B. Terminated
+C. Running
+D. Ready
+Answer key: D. Ready.
+Câu 2: Danh sách liên kết đơn trong cấu trúc của semaphore có NHỮNG vai trò nào sau đây?
+A. Quản lý danh sách các tiến trình bị block
+B. Kiểm soát thứ tự các tiến trình muốn sử dụng tài nguyên
+C. Lựa chọn tiến trình bị block
+D. Quản lý danh sách các tiến trình đã tiến vào vùng tranh chấp
+Answer key: A, B.
+Câu 3: Hàng chờ trên semaphore hoạt động theo cơ chế nào?
+A. Cơ chế stack.
+B. Tiến trình được chọn ngẫu nhiên
+C. First-in, First-out
+D. First-in, Last-out
+Answer key: c. First-in, First-out.
+Câu 4: Để hiện thực semaphore, hê điều hành cần cung cấp NHỮNG tác vụ nào sau đây?
+A. Tác vụ đặc biệt dùng để tiến trình tự hồi phục
+B. Tác vụ đặc biệt dùng để block tiến trình từ một tiến trình khác
+C. Tác vụ đặc biệt dùng để hồi phục một tiến trình
+D. Tác vụ đặc biệt dùng để block tiến trình gọi nó
+Answer key: C, D.
+Câu 5: Chọn phát biểu SAI về semaphore?
+A. Thao tác signal(S) sẽ khôi phục tiến trình đã bị chặn bởi lệnh wait(S) trước đó nếu giá trị của semaphore S sau khi tăng nhưng vẫn âm
+B. Tiến trình gọi lệnh wait(S) sẽ bị chặn nếu giá trị của semaphore dương
+C. Thao tác signal(S) làm tăng giá trị của semaphore
+D. Thao tác wait(S) làm giảm giá trị của semaphore S
+Answer key: B. Tiến trình gọi lệnh wait(S) sẽ bị chặn nếu giá trị của semaphore dương
+4. Ứng dụng semaphore:
+- Đảm bảo loại trừ tương hỗ:
++ Semaphore hoạt động như một khóa mutex
++ Bao CS bằng thao tác wait() và signal ().
+- Khởi tạo giá trị của semaphore là 1
+-> Chỉ tiến trình nào gọi wait() trước thì mới tiến vào CS. 
+--- QUIZ ---
+Câu 1: Khi khởi tạo giá trị semaphore bằng 1 thì NHỮNG phát biểu nào sau đây là đúng?
+A. Tiến trình gọi hàm wait() đầu tiên sẽ được vào vùng tranh chấp.
+B. Chỉ có tối đa 01 tiến trình bị block khi yêu cầu được vào vùng tranh chấp
+C. Tiến trình cuối cùng gọi hàm wait() sẽ được vào vùng tranh chấp trước
+D. Chỉ có tối đa 01 tiến trình được vào vùng tranh chấp cùng lúc
+Answer key: A, D. 
+Câu 2: Phát biểu sau Đúng (True) hay Sai (False)?
+Sử dụng semaphore sẽ luôn đảm bảo được loại trừ tương hỗ giữa các tiến trình.
+A. Đúng
+B. Sai
+Answer key: B. Sai
+- Đảm bảo thứ tự thực thi: 
+Đồng bộ P1 và P2 sao cho S1 luôn thực thi trước S2.
+- Khởi tạo semaphore synch = 0.
+- Phân tích thứ tự thực thi:
+. Nếu S1 thực thi trước: không sao.
+. Nếu S2 thực thi trước: block
