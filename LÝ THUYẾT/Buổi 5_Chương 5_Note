@@ -421,3 +421,151 @@ Answer key: B. Sai
 - Phân tích thứ tự thực thi:
 . Nếu S1 thực thi trước: không sao.
 . Nếu S2 thực thi trước: block
+--- QUIZ ---
+Câu hỏi: Điền vào chỗ trống:
+Để đồng bộ được bài toán này, ta cần đảm bảo:
+- Nếu S2 (P2) chạy trước S1(P1) thì sẽ bị chặn lại -> Cần có một lệnh ĐỨNG TRƯỚC lệnh S2 để đảm bảo điều kiện này 
+-> Sử dụng lệnh wait(synch).
+- Khi S1(P1) chạy xong -> Cần có một lệnh ĐỨNG SAU lệnh S1 để báo hiệu cho S2 (P2) để lệnh này được phép chạy 
+-> Sử dụng lệnh signal(synch).
+- Hàm wait(synch) sẽ block tiến trình P2 khi và chỉ khi semaphore synch = 0.
+- Đảm bảo điều kiện:
+Đồng bộ tiến trình Produce và Consume sao cho sells <- products.
+Bước 1: Dựa vào điều kiện, xác định tài nguyên:
+-> Số đơn vị mà sells được tăng.
+- Số lượng hàng hoá có thể được tính dựa trên độ chênh lệch giữa tổng số hàng đã bán và tổng số hàng đã sản xuất, tức là:
+stocks = products - sells.
+Bước 2: Xác định số lượng semaphore
+-> Quản lý một tài nguyên thì cần 1 semaphore.
+Bước 3: Đặt wait() và signal().
+Bước 4: Dựa vào trạng thái của hệ thống, xác định giá trị của semaphore.
+--- QUIZ ---
+Câu 1: Điền vào chỗ trống:
+Để cho phép 5 tiến trình cùng lúc thực thi thao tác wait() mà không bị block, cần khởi tạo giá trị của semaphore là ....
+Answer key: 5.
+Câu 2: Cho 2 tiến trình như sau:
+processA()
+{ A1; A2; }
+processB()
+{ B1; B2; }
+Sắp xếp các mã giả sau để đảm bảo được điều kiện A1, B1, thực hiện trước A2, B2, biết rằng:
+s1 là semaphore đồng bộ cho điều kiện A1 thực hiện trước A2, B2
+s2 là semaphore đồng bộ cho điều kiện B1 thực hiện trước A2, B2
+ProcessA{
+  A1
+  signal(s1)
+  wait(s2)
+  A2
+}
+ProcessB{
+  B1
+  signal(s2)
+  wait(s1)
+  B2
+}
+Câu 3: Semaphore là một công cụ đồng bộ rất mạnh mẽ, ta có thể sử dụng semaphore để thực hiện CÁC mục đích nào sau đây?
+A. Kiểm soát thời gian thực thi của các tiến trình
+B. Đảm bảo loại trừ tương hỗ
+C. Kiểm soát thứ tự thực thi của các tiến trình
+D. Kiểm soát số lần thực thi một thao tác bất kỳ của tiến trình
+Answer key: B, C. D.
+5. Một số nhận xét về semaphore:
+- Xét semaphore S:
++ Khi S -> value >= 0: số lần mà các tiến trình/tiểu trình có thể thực thi wait(S) mà không bị blocked là S -> value.
++ Khi S -> value < 0: số tiến trình/tiểu trình đang đợi trên S là |S->value|
+- Atomic và mutual exclusion: không được xảy ra trường hợp 2 tiến trình cùng đang ở trong thân lệnh wait(S) và signal(S) (cùng semaphore S) tại một thời điểm (ngay cả với hệ thống multiprocessor).
+-> Đoạn mã định nghĩa các lệnh wait(S) và signal(S) cùng chính là vùng tranh chấp.
+- Vùng tranh chấp của các tác vụ wait(S) và signal(S) thông thường rất nhỏ: khoảng 10 lệnh.
+- Giải pháp cho vùng tranh chấp wait(S) và signal(S):
++ Uniprocessor: có thể dùng cơ chế ngắt (disable interrupt). Nhưng phương pháp này không làm việc trên hệ thống multiprocessor.
++ Multiprocessor: có thể dùng các giải pháp software (như giải thuật Dekker, Peterson) hoặc giải pháp hardware (TestAndSet, Swap)
++ Vì CS nhỏ nên Busy Waiting rất thấp.
+6. Các vấn đề sử dụng semaphore:
+- Deadlock
+- Đảo tiến trình -> Cần lưu ý giá trị khởi tạo và thứ tự sắp xếp các thao tác khi sử dụng semaphore.
+--- QUIZ ---
+Câu 1: Hai thao tác wait() và signal() cần được đảm bảo loại trừ tương hỗ vì?
+A. Thao tác wait() có thể block tiến trình, từ đó dẫn đến tiến trình bị chờ đợi không giới hạn
+B. Thao tác signal() có thể chuyển trạng thái tiến trình từ waiting sang running và xung đột với các tiến trình khác
+C. Đoạn mã của hai thao tác này sử dụng chung giá trị của semaphore dẫn đến đây cũng là vùng tranh chấp
+Answer key: C. Đoạn mã của hai thao tác này sử dụng chung giá trị của semaphore dẫn đến đây cũng là vùng tranh chấp
+Câu 2: Tình trạng nào sau đây có thể xảy ra khi sử dụng semaphore sai cách?
+A. Cả 2 vấn đề được nêu
+B. Trì hoãn vô hạn định
+C. Deadlock
+Answer key: A. Cả 2 vấn đề được nêu
+Câu 3: Khi cài đặt semaphore, cần lưu ý những vấn đề nào sau đây?
+A. Số lượng semaphore sử dụng
+B. Tất cả các vấn đề được nêu
+C. Giá trị khởi tạo của semaphore
+D. Vị trí đặt thao tác wait() và signal()
+Answer key: B. Tất cả các vấn đề được nêu
+8. Định nghĩa monitor:
+- Là một kiểu dữ liệu trừu tượng (abstract data type) đóng gói những thành phần sau:
++ Các biến nội bộ: được khai báo trên trong monitor và chỉ có thể được truy cập bởi các hàm nội bộ trong monitor.
++ Các thủ tục: Một tập các thao tác được định nghĩa bởi lập trình viên và được thực thi theo loại trừ tương hỗ, các thủ tục này cũng chỉ có thể truy cập các biến nội bộ được khai báo ở trên.
++ Đoạn code khởi tạo.
+- Mã giả của một monitor:
+monitor monitor-name
+{
+  // shared variable declarations
+  procedure P1 
+  procedure P2
+  procedure Pn
+  initialization code 
+}
+- Hiện thực monitor với semaphore:
++ Variables:
+  semaphore mutex
+  mutex = 1
++ Mỗi thủ tục P sẽ được thay thế bởi đoạn mã bên dưới:
+  wait (mutex);
+  ...
+  body of P;
+  ...
+  signal (mutex);
+- Việc cài đặt semaphore mutex như trong mã giả sẽ đảm bảo được yêu cầu loại trừ tương hỗ cho từng thủ tục.
+- Đặc điểm của monitor:
++ Tiến trình "vào monitor" bằng cách gọi một trong các thủ tục được định nghĩa trong monitor.
++ Chỉ có một tiến trình có thể vào monitor tại một thời diểm 
+-> mutual exclusion được đảm bảo.
+- Tuy nhiên, cấu trúc của monitor không thực sự mạnh mẽ cho các mô hình đồng bộ khác, cần định nghĩa thêm cơ chế đồng bộ
+-> Cấu trúc condition.
+- Condition variable:
++ Nhằm cho phép tiến trình đợi "trong monitor", chỉ có thể được truy cập bên trong monitor. 
++ Khai bảo: condition x, y;
++ Chỉ có thể thao tác lên condition variable bằng 2 thao tác:
+. x.wait() - tiến trình thực thi thao tác này sẽ bị block trên condition variable x cho đến khi thao tác x.signal() được thực thi.
+. x.signal() - phục hồi quá trình thực thi của một tiến trình (nếu có) bị block trên condition variable x.
+  . Nếu có nhiều tiến trình bị block: chỉ một tiến trình được phục hồi.
+  . Nếu không có tiến trình nào bị block: không có tác dụng.
+- Đặc điểm:
++ Các tiến trình có thể đợi ở entry queue hoặc đợi ở các conditon queue(x,y,..)
++ Khi thực hiện lệnh x.wait(), tiến trình sẽ được chuyển vào conditio.queue x.
++ Lệnh x.signal() chuyển một tiến trình từ condition queue x vào monitor.
++ Khi đó, để đảm bảo mutual exclusion, tiến trình gọi x.signal() sẽ bị blocked và được đưa vào urgent queue. 
+--- QUIZ ---
+Câu 1: Đặc điểm nào sau đây KHÔNG phải là của monitor?
+A. Biến cục bộ chỉ có thể được truy xuất bởi các thủ tục của monitor
+B. Tiến trình vào monitor bằng cách gọi một trong các thủ tục của nó
+C. Có thể cho phép nhiều hơn 1 tiến trình vào monitor tại cùng một thời điểm
+D. Là một cấu trúc cấp cao, bên trong có chứa các biến cục bộ, các thủ tục và một đoạn mã nguồn khởi tạo
+Answer key: C. Có thể cho phép nhiều hơn 1 tiến trình vào monitor tại cùng một thời điểm
+Câu 2: Điểm khác biệt khi sử dụng thêm biến điều kiện (condition variable) so với với monitor gốc là gì?
+A. Tiến trình có thể chờ thêm trong hàng chờ của biến điều kiện
+B. Tiến trình truy cập vào monitor thông qua việc gọi các thủ tục
+C. Tiến trình truy cập vào monitor thông qua việc truy xuất biến điều kiện
+D. Tất cả đều đúng
+Answer key: A. Tiến trình có thể chờ thêm trong hàng chờ của biến điều kiện
+9. Liveness:
+- Tiến trình có thể phải chờ vô thời hạn để cố gắng yêu cầu các công cụ đồng bộ như mutex và semaphore
+-> vi phạm tiêu chí progress và bounded waiting.
+- Liveness là thuật ngữ để chỉ một tập các đặc điểm mà hệ thống phải thỏa mãn để đảm bảo tiến trình thực sự chạy.
+- Chờ đợi không giới hạn là một ví dụ tiêu biểu cho việc liveness thất bại (tiến trình không còn chạy).
+- Deadlock: là tình trạng hai hay nhiều tiến trình đang chờ đợi không giới hạn cho một sự kiện mà sự kiện này chỉ có thể được thực hiện bởi một trong các tiến trình đang chờ ở trên.
+- Một số dạng khác của deadlock:
++ Starvation - đói:
+. Một tiến trình có thể không bao giờ được thoát ra khỏi hàng đợi của semaphore mà nó đang chờ.
++ Priority inversion - nghịch đảo ưu tiên:
+. Vấn đề định thời khi tiến trình có độ ưu tiên thấp giữ khóa mà đang được cần bởi tiến trình có độ ưu tiên cao.
+. Có thể được giải quyết bằng priority inheritage protocol.
