@@ -118,3 +118,17 @@ B. Phát hiện deadlock và phục hồi
 C. Ngăn deadlock
 D. Bỏ qua deadlock
 Answer key: A. Tránh deadlock.
+4. Tránh deadlock:
+- Ngăn deadlock sử dụng tài nguyên không hiệu quả.
+- Tránh deadlock vẫn đảm bảo hiệu suất sử dụng tài nguyên tối đa đến mức có thể
+- Yêu cầu mỗi tiến trình khai báo số lượng tài nguyên tối đa cần để thực hiện công việc
+- Giải thuật tránh deadlock sẽ kiểm tra trạng thái cấp phát tài nguyên để đảm bảo hệ thông không rơi vào deadlock.
+- Trạng thái câp phát tài nguyên được định nghĩa dựa trên số tài nguyên còn lại, số tài nguyên đã được cấp phát và yêu cầu tối đa của các tiến trình.
+- Trạng thái safe và unsafe:
++ Một trạng thái của hệ thống được gọi là an toàn (safe) nếu tồn tại một chuỗi thứ tự an toàn.
++ Một chuỗi quá trình <P1, P2,...,Pn> là một chuỗi an toàn nếu:
+. Với mọi i = 1,...,n yêu cầu tối đa về tài nguyên của Pi có thể được thỏa bởi:
+  . Tài nguyên mà hệ thống đang có sẵn sàng
+  . Cùng với tài nguyên mà tất cả các Pj (j<i) đang giữ
++ Một trạng thái của hệ thông được gọi là không an toàn (unsafe) nếu không tồn tại một chuỗi an toàn.
+ 
