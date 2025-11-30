@@ -1,0 +1,120 @@
+Chương VI: DEADLOCK
+1. Vấn đề Deadlock: 
+- Gọi S và Q là hai biến semaphore được khởi tạo = 1.
+P0 wait(S); wait(Q); signal(S); signal(Q);
+P1 wait(Q); wait(S); signal(Q); signal(S);
+- Giả sử HĐH sử dụng giải thuật RR và quantum time bằng thời gian thực thi hàm wait(), khi đó P0 thực thi wait(S), rồi P1 thực thi wait(Q), rồi P0 thực thi wait(Q) bị blocked, P1 thực thi wait(S) bị blocked.
+- Tình huống: Một tập các tiến trình bị block, mỗi tiến trình giữ tài nguyên đang chờ tài nguyên mà tiến trình khác trong tập đang giữ.
+- Định nghĩa;
++ Một tiến trình gọi là deadlock nếu nó đang đợi một sự kiện mà sẽ không bao giờ xảy ra. Thông thường, có nhiều hơn một tiến trình bị liên quan trong một deadlock.
++ Một tiến trình gọi là trì hoãn vô hạn định nếu nó bị trì hoãn một khoảng thời gian dài lặp đi lặp lại trong khi hệ thống đáp ứng cho những tiến trình khác. Ví dụ: Một tiến trình sẵn sàng để xử lý nhưng nó không bao giờ nhận được CPU.
+- Điều kiện cần để xảy ra deadlock:
++ Loại trừ tương hỗ: ít nhất một tài nguyên được giữ theo nonsharable mode. Ví dụ: printer <=? read-only files (sharable).
++ Giữ và chờ cấp thêm tài nguyên: Một tiến trình đang giữ ít nhất một tài nguyên và đợi thêm tài nguyên do quá trình khác giữ.
++ Không trưng dụng: tài nguyên không thể bị lấy lại mà chỉ có thể được trả lại từ tiến trình đang giữ tài nguyên đó khi nó muốn
++ Chu trình đợi: tồn tại một tập (P0,...,Pn) các quá trình đang đợi sao cho;
+  . P0 đợi một tài nguyên mà P1 giữ
+  . P1 đợi một tài nguyên mà P2 giữ
+  . ...
+  . Pn đợi một tài nguyên mà P0 giữ.
+--- QUIZ ---
+Câu 1: Điều kiện nào KHÔNG phải là điều kiện cần để xảy ra deadlock?
+A. Tài nguyên có thể bị hệ thống trưng dụng
+B. Tồn tại chu trình đợi trong hệ thống
+C. Giữ và chờ cấp thêm tài nguyên
+D. Loại trừ tương hỗ
+Answer key: A. Tài nguyên có thể bị hệ thống trưng dụng
+Câu 2: Chọn phát biểu đúng?
+A. Một tiến trình gọi là deadlock nếu nó đang đợi một sự kiện mà sẽ không bao giờ xảy ra
+B. Một tiến trình gọi là deadlock nếu nó bị trì hoãn một khoảng thời gian dài lặp lại trong khi hệ thống đáp ứng cho những tiến trình khác.
+C. Một tiến trình gọi là deadlock nếu nó đang đợi một sự kiến mà sẽ xảy ra
+Answer key: A. Một tiến trình gọi là deadlock nếu nó đang đợi một sự kiện mà sẽ không bao giờ xảy ra
+Câu 3: Chọn phát biểu đúng và đầy đủ nhất?
+A. Tình huống deadlock là tình huống một tập các tiến trình bị block, mỗi tiến trình giữ tài nguyên và đang chờ tài nguyên mà tiến trình khác trong tập đang giữ.
+B. Tình huống deadlock là tình huống một tiến trình bị block, mỗi tiến trình giữ tài nguyên và đang chờ tài nguyên mà tiến trình khác trong tập đang giữ.
+C. Tình huống deadlock là tình huống một tập các tiến trình bị block.
+D. Tình huống deadlock là tình huống mỗi tiến trình giữ tài nguyên và đang chờ tài nguyên mà tiến trình khác trong tập đang giữ.
+Answer key: A. Tình huống deadlock là tình huống một tập các tiến trình bị block, mỗi tiến trình giữ tài nguyên và đang chờ tài nguyên mà tiến trình khác trong tập đang giữ.
+2. Mô hình hóa hệ thống:
+- Các loại tài nguyên, kí hiệu R1, R2,...Rm, bao gồm:
++ CPU cycle, không gian bộ nhớ, thiết bị I/O, file, semaphore.
++ Mỗi loại tài nguyên Ri có Wi thực thể.
+- Giả sử tài nguyên tái sử dụng theo chu kỳ:
++ Yêu cầu: tiến trình phải chờ nếu yêu cầu không được đáp ứng ngay.
++ Sử dụng: tiến trình sử dụng tài nguyên
++ Hoàn trả: tiến trình hoàn trả tài nguyên
+- Các tác vụ yêu cầu và hoàn trả đều là system call. 
+Ví dụ: Request/ release device, open/close file, allocate/free memory, wall/signal.
+- Đồ thị cấp phát tài nguyện - RAG:
++ Là đồ thị có hướng, với tập đỉnh V và tập cạnh E.
++ Tập đỉnh V gồm 2 loại:
+. P = {P1, P2,...,Pn} (All process)
+. R = {R1, R2,...,Rn} (All resource)
++ Tập cạnh E gồm 2 loại:
+. Cạnh yêu cầu: Pi -> Rj
+. Cạnh cấp phát: Rj -> Pi
+- RAG và deadlock:
++ RAG không chứa chu trình -> không có deadlock.
++ RAG chứa một (hay nhiều) chu trình.
+  . Nếu mỗi loại tài nguyên chỉ có một thực thể -> deadlock
+  . Nếu mỗi loại tài nguyên có nhiều thực thể -> có thể xảy ra deadlock.
+--- QUIZ ---
+Câu 1: Đồ thị cấp phát tài nguyên KHÔNG có đặc điểm nào dưới đây?
+A. Tập cạnh gồm 2 loại
+B. Được xây dựng từ đồ thị wait for
+C. Tập đỉnh gồm các tất cả các tiến trình và loại tài nguyên
+D. Đồ thị có hướng.
+Answer key: B. Được xây dựng từ đồ thị wait for
+Câu 2: Cho 1 hệ thống có 4 tiến trình P1, P2, P3, P4 và 3 loại tài nguyên R1 (có 3 thực thể), R2 (có 2 thực thể) R3 (có 2 thực thể). P1 giữ 1 thực thể R1 và yêu cầu 1 thực thể R2; P2 giữ 2 thực thể R2 và yêu cầu 1 thực thể R1 và 1 thực thể R3; P3 giữ 1 thực thể R1 và yêu cầu 1 thực thể R2; P4 giữ 2 thực thể R3 và yêu cầu 1 thực thể R1. Có bao nhiêu chuỗi an toàn cho hệ thống trên?
+A. 3
+B. 4
+C. 2
+D. 1
+Answer key: C. 2
+3. Các phương pháp giải quyết deadlock: Ngăn deadlock
+- Bảo đảm rằng hệ thống không rơi vào tình trạng deadlock bằng cách ngăn hoặc tránh deadlock:
+1. Ngăn deadlock: không cho phép (ít nhất) một trong 4 điều kiện cần cho deadlock.
+2. Tránh deadlock: các quá trình cung cấp thông tin về tài nguyên nó cần để hệ thống cấp phát tài nguyên một cách thích hợp.
+3. Cho phép hệ thống vào trạng thái deadlock, nhưng sau đó phát hiện deadlock và phục hồi hệ thống.
+4. Bỏ qua mọi vấn đề, xem như deadlock không bao giờ xảy ra trong hệ thống. Deadlock không được phát hiện, dẫn đến việc giảm hiệu suất của hệ thống. Cuối cùng, hệ thống có thể ngưng hoạt động và phải khởi động lại.
+- Ngăn deadlock:
++ Ngăn deadlock bằng cách ngăn một trong 4 điều kiện cần của deadlock.
++ Ngăn mutual exclusion:
+. Đối với tài nguyên không chia sẻ (printer): không làm được
+. Đối với tài nguyên chia sẻ (read-only file): không cần thiết.
++ Hold and wait:
+. Cách 1: Mỗi tiến trình yêu cầu toàn bộ tài nguyên cần thiết một lần. Nếu có đủ tài nguyên thì hệ thống sẽ cấp phát, nếu không đủ tài nguyên thì tiến trình phải bị block.
+. Cách 2: Khi yêu cầu tài nguyên, tiến trình không được giữ tài nguyên nào. Nếu đang có thì phải trả lại trước khi yêu cầu.
++ Ngăn no preemption: nếu tiến trình A có giữ tài nguyên và đang yêu cầu tài nguyên khác nhưng tài nguyên này chưa được cấp phát ngay thì:
+. Cách 1: Hệ thống lấy lại mọi tài nguyên mà A đang giữ.
+  A chỉ bắt đầu lại được khi có được các tài nguyên đã bị lấy lại cùng với tài nguyên đang yêu cầu.
+. Cách 2: Hệ thống sẽ xem tài nguyên mà A yêu cầu.
+  . Nếu tài nguyên được giữ bởi một tiến trình khác đang đợi thêm tài nguyên, tài nguyên này được hệ thống lấy lại và cấp phát cho A.
+  . Nếu tài nguyên được giữ bởi tiến trình không đợi tài nguyên, A phải đợi và tài nguyên của A bị lấy lại. Tuy nhiên hệ thống chỉ lấy lại các tài nguyên mà tiến trình khác yêu cầu.
++ Ngăn chu trình đợi: gán một thứ tự cho tất cả các tài nguyên trong hệ thống.
+  . Tập hợp tài nguyên: R = {R1, R2,...,Rn}
+    . Hàm ánh xạ F: R -> N
+  . Ví dụ: F(file) = 1, F(disk) = 5, F(printer) = 12
+    . F là hàm định nghĩa thứ tự trên tập các loại tài nguyên.
+  . Mỗi tiến trình chỉ có thể yêu cầu thực thể của một loại tài nguyên theo thứ tự tăng dần (định nghĩa bởi hàm F) của loại tài nguyên.
+  . Ví dụ: Chuỗi yêu cầu thực thể hợp lệ: file -> disk -> printer.
+  . Khi một tiến trình yêu cầu một thực thể của loại tài nguyên Rj thì nó phải trả lại các tài nguyên Ri với F(Ri) > F(Rj).
+--- QUIZ ---
+Câu 1: “Không cho phép (ít nhất) một trong 4 điều kiện cần cho deadlock xảy ra” là đặc điểm của phương pháp giải quyết deadlock nào?
+A. Phát hiện deadlock và phục hồi
+B. Tránh deadlock
+C. Bỏ qua deadlock
+D. Ngăn deadlock
+Answer key: D. Ngăn deadlock.
+Câu 2: Phương pháp “Mỗi tiến trình chỉ có thể yêu cầu thực thể của một loại tài nguyên theo thứ tự tăng dần (định nghĩa bởi hàm F) của loại tài nguyên” là phương pháp nào trong các phương pháp ngăn deadlock?
+A. Ngăn mutual exclusion
+B. Ngăn chu trình đợi
+C. Hold and wait
+D. Ngăn no preemption
+Answer key: B. Ngăn chu trình đợi
+Câu 3: “Các tiến trình cần cung cấp thông tin về tài nguyên nó cần để hệ thống cấp phát tài nguyên một cách thích hợp” là đặc điểm của phương pháp giải quyết deadlock nào?
+A. Tránh deadlock
+B. Phát hiện deadlock và phục hồi
+C. Ngăn deadlock
+D. Bỏ qua deadlock
+Answer key: A. Tránh deadlock.
